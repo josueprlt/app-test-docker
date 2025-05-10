@@ -1,0 +1,62 @@
+### ✅ Créer un test
+POST http://localhost:5001/api/test
+Content-Type: application/json
+
+{
+  "name": "Test de login",
+  "description": "Vérifie la connexion utilisateur",
+  "date": "2025-05-09T10:00:00.000Z",
+  "success": true
+}
+
+### 📄 Obtenir tous les tests
+GET http://localhost:5001/api/tests
+
+### 📄 Obtenir un test par ID
+GET http://localhost:5001/api/test/1
+
+### ✏️ Modifier un test
+PUT http://localhost:5001/api/test/1
+Content-Type: application/json
+
+{
+  "name": "Test de connexion utilisateur",
+  "description": "Mise à jour de la description",
+  "date": "2025-05-09T12:00:00.000Z",
+  "success": false
+}
+
+### ❌ Supprimer un test
+DELETE http://localhost:5001/api/test/1
+
+
+
+### ✅ Créer un log (lié au test avec testId: 1)
+POST http://localhost:5001/api/log
+Content-Type: application/json
+
+{
+  "testId": 1,
+  "message": "Étape 1 : chargement du formulaire réussi",
+  "date": "2025-05-09T10:05:00.000Z",
+  "success": true
+}
+
+### 📄 Obtenir tous les logs
+GET http://localhost:5001/api/logs
+
+### 📄 Obtenir un log par ID
+GET http://localhost:5001/api/log/1
+
+### ✏️ Modifier un log
+PUT http://localhost:5001/api/log/1
+Content-Type: application/json
+
+{
+  "message": "Étape 1 mise à jour",
+  "date": "2025-05-09T10:10:00.000Z",
+  "success": false
+}
+
+### ❌ Supprimer un log
+DELETE http://localhost:5001/api/log/1
