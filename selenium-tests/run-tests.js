@@ -15,7 +15,7 @@ async function waitForAPI(url, retries = 10, delay = 2000) {
 
 (async () => {
     try {
-        const data = await waitForAPI('http://backend:5001/api/tests');
+        const data = await waitForAPI(`${process.env.BACKURL}/api/tests`);
         console.log("✅ Requête envoyée :", data);
     } catch (err) {
         console.error(err.message);
