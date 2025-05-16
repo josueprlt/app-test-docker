@@ -7,6 +7,7 @@ module.exports = (sequelize, DataTypes) => {
         date: {
             type: DataTypes.DATE,
             allowNull: false,
+            defaultValue: sequelize.NOW
         },
         success: {
             type: DataTypes.BOOLEAN,
@@ -19,4 +20,4 @@ module.exports = (sequelize, DataTypes) => {
     };
 
     return Log;
-};  
+};

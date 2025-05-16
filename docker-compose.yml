@@ -1,23 +1,22 @@
-version: '3.8'
-
 services:
   db:
-    image: mysql:8.0
+    image: postgres:15
+    container_name: database
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: test_db
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     volumes:
-      - db_data:/var/lib/mysql
+      - pg_data:/var/lib/postgresql/data
     ports:
-      - "3306:3306"
+      - "5432:5432"
 
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    container_name: phpmyadmin
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
     environment:
-      PMA_HOST: db
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
     ports:
       - "8080:80"
     depends_on:
@@ -27,10 +26,10 @@ services:
     build: ./backend
     container_name: backend
     environment:
-      DB_HOST: db
-      DB_USER: user
-      DB_PASSWORD: password
-      DB_NAME: test_db
+      DB_HOST: ${DB_HOST}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
     ports:
       - "5001:5001"
     depends_on:
@@ -49,12 +48,21 @@ services:
     depends_on:
       - backend
 
-  selenium-tests:
-    build: ./selenium-tests
-    container_name: selenium-tests
-    depends_on:
-      - backend
-      - db
+  test-runner:
+    build:
+      context: ./selenium
+      dockerfile: Dockerfile
+    container_name: test-runner
+    volumes:
+      - .:/app
+    stdin_open: true # <== Pour terminal interactif
+    tty: true # <== Pour terminal interactif
+
+  selenium:
+    image: selenium/standalone-chrome
+    container_name: selenium
+    ports:
+      - "4444:4444"
 
 volumes:
-  db_data:
+  pg_data:

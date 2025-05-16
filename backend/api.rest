@@ -1,5 +1,5 @@
 ### ✅ Créer un test
-POST http://localhost:5001/api/test
+POST http://localhost:5001/api/tests
 Content-Type: application/json
 
 {
@@ -13,10 +13,10 @@ Content-Type: application/json
 GET http://localhost:5001/api/tests
 
 ### 📄 Obtenir un test par ID
-GET http://localhost:5001/api/test/1
+GET http://localhost:5001/api/tests/1
 
 ### ✏️ Modifier un test
-PUT http://localhost:5001/api/test/1
+PUT http://localhost:5001/api/tests/1
 Content-Type: application/json
 
 {
@@ -27,7 +27,7 @@ Content-Type: application/json
 }
 
 ### ❌ Supprimer un test
-DELETE http://localhost:5001/api/test/1
+DELETE http://localhost:5001/api/tests/1
 
 
 

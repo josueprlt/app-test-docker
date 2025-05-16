@@ -3,6 +3,9 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+# Others files to forget
+# seed.js
+
 # User-specific files
 *.rsuser
 *.suo

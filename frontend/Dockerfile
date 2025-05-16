@@ -1,19 +1,17 @@
-# Étape 1 : build de l'application
-FROM node:18-alpine AS builder
+FROM node:18 AS builder
+
+RUN npm config set strict-ssl false
 
 WORKDIR /app
 COPY . .
 RUN npm install
 RUN npm run build
 
-# Étape 2 : serveur statique avec nginx
-FROM nginx:alpine
+RUN npm config set strict-ssl true
 
+FROM nginx:alpine
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Copie la config nginx personnalisée (optionnel)
-# COPY nginx.conf /etc/nginx/nginx.conf
-
-EXPOSE 5173
+EXPOSE 80
 
 CMD ["nginx", "-g", "daemon off;"]
