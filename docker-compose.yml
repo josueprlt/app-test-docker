@@ -24,6 +24,8 @@ services:
 
   backend:
     build: ./backend
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # <== Pour lancer des tests via le front
     container_name: backend
     environment:
       DB_HOST: ${DB_HOST}

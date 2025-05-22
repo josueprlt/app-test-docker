@@ -1,40 +1,72 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { TransformInSecAndMs } from '../utils/TransformInSecAndMs';
 
-const StepsTableau = () => {
-    const [stepsTableau, setStepsTableau] = useState(['Etapes', 'Status', 'Message', 'Délai'])
+const StepsTableau = ({ logs, delay }) => {
+    const [stepsTableau] = useState(['Étapes', 'Status', 'Message', 'Délai']);
+    const [logsTableau, setLogsTableau] = useState(null);
+    const [delayTableau, setDelayTableau] = useState(null);
+
+    useEffect(() => {
+        setLogsTableau(logs);
+    }, [logs]);
+
+    useEffect(() => {
+        if (delay?.datasets?.[0]?.data) {
+            setDelayTableau(delay.datasets[0].data);
+        }
+    }, [delay]);
+
+    console.log(delayTableau);
+    
 
     return (
-        <>
-            <table>
-                <thead>
+        <div className="w-full overflow-x-auto">
+            <table className="w-full table-auto border border-gray-300 rounded-md">
+                <thead className="bg-gray-300">
                     <tr>
                         {stepsTableau.map((step) => (
-                            <th className='pr-4 text-left' scope="col" key={step}>{step}</th>
+                            <th
+                                key={step}
+                                scope="col"
+                                className="px-4 py-2 text-left text-sm font-medium text-black-500"
+                            >
+                                {step}
+                            </th>
                         ))}
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <th className='pr-4 text-left' scope="row">Chris</th>
-                        <td className='pr-4 text-left'>HTML tables</td>
-                        <td className='pr-4 text-left'>22</td>
-                        <td className='text-left'>220ms</td>
-                    </tr>
-                    <tr>
-                        <th className='pr-4 text-left' scope="row">Chris</th>
-                        <td className='pr-4 text-left'>HTML tables eeeeeeeeeeeeeeeeeeeee</td>
-                        <td className='pr-4 text-left'>22</td>
-                        <td className='text-left'>220ms</td>
-                    </tr>
-                    <tr>
-                        <th className='pr-4 text-left' scope="row">Chris</th>
-                        <td className='pr-4 text-left'>HTML tables</td>
-                        <td className='pr-4 text-left'>22</td>
-                        <td className='text-left'>220ms</td>
-                    </tr>
+                    {logsTableau && logsTableau.length > 0 ? (
+                        logsTableau.map((log, idx) => (
+                            <tr key={idx} className="even:bg-gray-100">
+                                <td className="px-4 py-2 text-left">{idx + 1}</td>
+                                <td className="px-4 py-2 text-left">
+                                    <span
+                                        className={`inline-block w-6 h-6 rounded-full ${log.success ? 'bg-green-500' : 'bg-red-500'
+                                            }`}
+                                    ></span>
+                                </td>
+                                <td className="px-4 py-2 text-left">{log.message}</td>
+                                <td className="px-4 py-2 text-left">
+                                    {delayTableau && delayTableau[idx]
+                                        ? TransformInSecAndMs(delayTableau[idx].y)
+                                        : '-'}
+                                </td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td
+                                colSpan={stepsTableau.length}
+                                className="text-center py-4 text-black-500"
+                            >
+                                Aucun log à afficher
+                            </td>
+                        </tr>
+                    )}
                 </tbody>
             </table>
-        </>
+        </div>
     );
 };
 

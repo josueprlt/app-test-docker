@@ -7,14 +7,17 @@ module.exports = (sequelize, DataTypes) => {
         description: {
             type: DataTypes.TEXT,
         },
-        date: {
-            type: DataTypes.DATE,
+        type: {
+            type: DataTypes.STRING,
             allowNull: false,
-            defaultValue: sequelize.NOW
         },
         success: {
             type: DataTypes.BOOLEAN,
             defaultValue: false,
+        },
+        valid: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: true,
         },
     });
 

@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 @theme {
+  --color-gray-700: #A9A9A9;
   --color-gray-500: #F6F7F9;
   --color-gray-300: #e8eaee;
   --color-gray-transparent-500: #f6f7f900;
@@ -14,8 +15,10 @@
   --color-green-500: #00B521;
   --color-red-300: #FEE7E7;
   --color-red-500: #EB0000;
+  --color-orange-300: #fef5e7;
+  --color-orange-500: #eba800;
 }
 
 .shadow {
-    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.044);
+  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.044);
 }

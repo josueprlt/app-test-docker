@@ -54,3 +54,16 @@ exports.deleteLog = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+
+exports.deleteAllLogsByIdTest = async (req, res) => {
+    try {
+        const testId = req.params.id;
+        const deletedCount = await Log.destroy({ where: { testId } });
+        if (deletedCount === 0) {
+            return res.status(404).json({ message: 'No logs found for this test' });
+        }
+        res.json({ message: `${deletedCount} logs deleted for test ${testId}` });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};

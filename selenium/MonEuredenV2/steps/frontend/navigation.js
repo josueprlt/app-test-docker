@@ -1,7 +1,12 @@
+const { generateError } = require('../../utils/generateError.js');
 
 async function navigation(url, driver) {
-        // Aller sur la page de connexion
-        await driver.get(url);
+        try {
+                // Aller sur la page de connexion
+                await driver.get(url);
+        } catch (error) {
+                generateError(error, '');
+        }
 }
 
 module.exports = { navigation };

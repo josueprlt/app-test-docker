@@ -5,11 +5,18 @@ const { exit } = require('../steps/frontend/exit');
 const { generateError } = require('../utils/generateError.js');
 const { getDriver } = require('../utils/getDriver.js');
 const { getConnexion } = require('../utils/getConnexion.js');
-const { GetPE } = require('../steps/backend/getPE.js');
-const { waitForSelenium } = require('../../waitForSelenium.js');
+const { waitForSelenium } = require('../utils/waitForSelenium.js');
+const { createTest } = require('../utils/createTest.js');
+const { updateSuccessOfTest } = require('../utils/updateSuccessOfTest.js');
 
-async function desk_homePage() {
+async function AccueilPage() {
+    const type = "2-accueilPage";
     await waitForSelenium();
+    await createTest(
+        "Parcours de Connexion",
+        "Vérifie le parcours utilisateur permettant de se connecter à l'application MonEureden V2",
+        type
+    );
 
     let driver = await getDriver();
     let connexion = getConnexion();
@@ -17,20 +24,19 @@ async function desk_homePage() {
     try {
         await executeStep(
             () => navigation(connexion.MonEuredenV2.url, driver),
-            '✅ 1/3 : Navigation réussie',
-            '❌ 1/3 : Échec de la navigation'
+            '✅ Navigation réussie',
+            '❌ Échec de la navigation',
+            'Frontend',
+            type
+            
         );
 
         await executeStep(
             () => login(connexion.MonEuredenV2.mail, connexion.MonEuredenV2.password, driver),
-            '✅ 2/3 : Connexion réussie',
-            '❌ 2/3 : Échec de la connexion'
-        );
-
-        await executeStep(
-            () => GetPE(connexion.MonEuredenV2.codeTiers),
-            '📡✅ getPE réussi',
-            '📡❌ Échec de la requête getPE'
+            '✅ Connexion réussie',
+            '❌ Échec de la connexion',
+            'Frontend',
+            type
         );
 
     } catch (err) {
@@ -38,10 +44,13 @@ async function desk_homePage() {
     } finally {
         await executeStep(
             () => exit(driver),
-            '✅ 3/3 : Navigateur fermé',
-            '❌ 3/3 : Échec de la fermeture du navigateur'
+            '✅ Navigateur fermé',
+            '❌ Échec de la fermeture du navigateur',
+            'Frontend',
+            type
         );
+        await updateSuccessOfTest(type);
     }
 }
 
-desk_homePage();
+AccueilPage();

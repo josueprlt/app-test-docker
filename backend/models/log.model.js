@@ -4,14 +4,14 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.TEXT,
             allowNull: false,
         },
-        date: {
-            type: DataTypes.DATE,
+        provenance: {
+            type: DataTypes.STRING,
             allowNull: false,
-            defaultValue: sequelize.NOW
         },
         success: {
             type: DataTypes.BOOLEAN,
-            defaultValue: false,
+            allowNull: true,
+            defaultValue: null,
         },
     });
 

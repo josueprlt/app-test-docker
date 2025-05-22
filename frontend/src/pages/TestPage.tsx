@@ -7,6 +7,7 @@ import { useParams } from "react-router";
 import { Link } from "react-router";
 import SyncLoader from "react-spinners/SyncLoader";
 import ChartComponent from "../components/ChartComponent";
+import LaunchSection from "../components/LaunchSection";
 
 function TestPage() {
     let params = useParams()
@@ -60,7 +61,7 @@ function TestPage() {
 
     useEffect(() => {
         if (data) {
-            setOutputDate(`le ${new Date(data.createdAt).getDate()} ${months[new Date(data.createdAt).getMonth()]} ${new Date(data.createdAt).getFullYear()} à ${new Date(data.createdAt).getHours()}h${new Date(data.createdAt).getMinutes()}`);
+            setOutputDate(`le ${new Date(data.updatedAt).getDate()} ${months[new Date(data.updatedAt).getMonth()]} ${new Date(data.updatedAt).getFullYear()} à ${new Date(data.updatedAt).getHours()}h${new Date(data.updatedAt).getMinutes()}`);
 
             let successCount = 0;
             let errorCount = 0;
@@ -99,9 +100,9 @@ function TestPage() {
         logsElt.forEach((log, index) => {
             let remainingTime;
             if (index === 0) {
-                remainingTime = GetTimeDifference(data.createdAt, logsElt[index].createdAt);
+                remainingTime = GetTimeDifference(data.updatedAt, logsElt[index].updatedAt);
             } else {
-                remainingTime = GetTimeDifference(logsElt[index - 1].createdAt, logsElt[index].createdAt);
+                remainingTime = GetTimeDifference(logsElt[index - 1].updatedAt, logsElt[index].updatedAt);
             }
             chartData.datasets[0].data.push({ x: index + 1, y: remainingTime });
             chartData.labels.push(index + 1);
@@ -137,6 +138,8 @@ function TestPage() {
                         )}
                     </div>
                 </section>
+
+                <LaunchSection data={data} />
 
                 <section className="grid grid-flow-col grid-col-3 gap-2">
                     <section className="col-span-1 flex flex-row items-center gap-4 p-2 rounded-md bg-white-500 shadow md:p-4 xl:gap-6">
@@ -186,8 +189,12 @@ function TestPage() {
                     <ChartComponent title="Délai par étape" data={lineChartData} options={options} props={"w-full"} />
                 </section>
 
-                <section className="flex flex-wrap p-2 w-full overflow-y-scroll rounded-md bg-white-500 shadow">
-                    <StepsTableau />
+                <section className="flex flex-wrap w-full rounded-md overflow-hidden bg-white-500 shadow">
+                    {data === null ? (
+                        <SyncLoader color="#3C3C3C" size={8} />
+                    ) : (
+                        <StepsTableau logs={data.logs} delay={lineChartData} />
+                    )}
                 </section>
             </main>
         </>
