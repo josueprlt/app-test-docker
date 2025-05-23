@@ -5,7 +5,7 @@ import SyncLoader from "react-spinners/SyncLoader";
 
 function AccueilPage({ data = null, allData = null }: {
     data: { id: number; name: string; updatedAt: string; success: boolean; logs: [] }[] | null,
-    allData?: { id: number; name: string; updatedAt: string; success: boolean; logs: [] }[] | null
+    allData?: { id: number; name: string; createdAt: string; updatedAt: string; success: boolean; logs: [] }[] | null
 }) {
     const [successAllTests, setSuccessAllTests] = useState(0);
     const [errorsAllTests, setErrorsAllTests] = useState(0);
@@ -85,7 +85,7 @@ function AccueilPage({ data = null, allData = null }: {
         const months = ["Jan.", "Fév.", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Sept.", "Oct.", "Nov.", "Déc."];
 
         allData.forEach((test) => {
-            const dateOnly = `${new Date(test.updatedAt).getDate()} ${months[new Date(test.updatedAt).getMonth()]}`;
+            const dateOnly = `${new Date(test.createdAt).getDate()} ${months[new Date(test.createdAt).getMonth()]}`;
             if (!dailyStats[dateOnly]) {
                 dailyStats[dateOnly] = { total: 0, success: 0, fail: 0 };
             }

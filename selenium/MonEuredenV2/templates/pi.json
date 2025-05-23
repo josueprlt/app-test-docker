@@ -1,0 +1,19 @@
+{
+    "id": "",
+    "numero": "11996588",
+    "codeContact": "",
+    "type": "PASSPORT",
+    "sousType": "France Electronic Passport 2008",
+    "dateExpiration": "2028-01-12",
+    "dateDelivrance": "2024-01-12",
+    "paysDelivrance": "FRA",
+    "dateNaissance": "1980-01-12",
+    "nationalite": "FRA",
+    "nom": "DUPONT",
+    "prenoms": [
+        "string"
+    ],
+    "_version": 1,
+    "_dateCreation": "2025-03-21T06:12:36.444641Z",
+    "_dateModification": "2025-03-21T06:12:36.444641Z"
+}

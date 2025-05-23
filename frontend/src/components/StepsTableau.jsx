@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { TransformInSecAndMs } from '../utils/TransformInSecAndMs';
 
 const StepsTableau = ({ logs, delay }) => {
-    const [stepsTableau] = useState(['Étapes', 'Status', 'Message', 'Délai']);
+    const [stepsTableau] = useState(['Étapes', 'Status', 'Message', 'Délai', 'Provenance']);
     const [logsTableau, setLogsTableau] = useState(null);
     const [delayTableau, setDelayTableau] = useState(null);
 
@@ -15,9 +15,6 @@ const StepsTableau = ({ logs, delay }) => {
             setDelayTableau(delay.datasets[0].data);
         }
     }, [delay]);
-
-    console.log(delayTableau);
-    
 
     return (
         <div className="w-full overflow-x-auto">
@@ -52,6 +49,7 @@ const StepsTableau = ({ logs, delay }) => {
                                         ? TransformInSecAndMs(delayTableau[idx].y)
                                         : '-'}
                                 </td>
+                                <td className="px-4 py-2 text-left">{log.provenance}</td>
                             </tr>
                         ))
                     ) : (

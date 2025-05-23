@@ -24,9 +24,11 @@ db.Sequelize = Sequelize;
 // Modèles
 db.Test = require('./test.model')(sequelize, Sequelize);
 db.Log = require('./log.model')(sequelize, Sequelize);
+db.Option = require('./option.model')(sequelize, Sequelize);
 
 // Relations
 db.Test.hasMany(db.Log, { foreignKey: 'testId', as: 'logs', onDelete: 'CASCADE' });
+db.Test.hasMany(db.Option, { foreignKey: 'testId', as: 'options', onDelete: 'CASCADE' });
 db.Log.belongsTo(db.Test, { foreignKey: 'testId' });
 
 module.exports = db;

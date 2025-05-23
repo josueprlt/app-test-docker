@@ -100,7 +100,7 @@ function TestPage() {
         logsElt.forEach((log, index) => {
             let remainingTime;
             if (index === 0) {
-                remainingTime = GetTimeDifference(data.updatedAt, logsElt[index].updatedAt);
+                remainingTime = GetTimeDifference(data.createdAt, logsElt[index].updatedAt);
             } else {
                 remainingTime = GetTimeDifference(logsElt[index - 1].updatedAt, logsElt[index].updatedAt);
             }

@@ -4,11 +4,14 @@ import { IconPlay, IconPause } from "./icons";
 import SyncLoader from "react-spinners/SyncLoader";
 import MoonLoader from "react-spinners/MoonLoader";
 import ChipDate from "./ChipDate";
+import LaunchOption from "./LaunchOption";
+import InfoOptionLaunch from "./InfoOptionLaunch";
 import Button from "./Button";
 
 const LaunchSection = ({ data }) => {
     const navigate = useNavigate();
     const [state, setState] = useState('inactif');
+    const [optionsChoice, setOptionsChoice] = useState('');
 
     const colorRound = {
         inactif: "bg-gray-700",
@@ -73,29 +76,39 @@ const LaunchSection = ({ data }) => {
         }
     }
 
+    const handleOptionsUpdate = (updatedChoices) => {
+        setOptionsChoice(updatedChoices);
+        console.log("Options choisies :", updatedChoices);
+    };
+
     return (
-        <section className="col-span-1 flex flex-row justify-between items-center gap-4 py-2 px-5 rounded-md bg-white-500 shadow md:py-4 md:p-10 xl:gap-6">
-            {data === null ? (
-                <SyncLoader color="#3C3C3C" size={8} />
-            ) : (
-                <>
-                    <div className='flex flex-wrap gap-2'>
-                        <h3 className="text-xl font-bold">{data.type}</h3>
-                        {state === 'loading' && <Button href="http://localhost:4444/ui/#/sessions" blank={true} >Visualiser le test en direct</Button>}
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <span className={`relative block w-4 h-4 rounded-full ${colorRound[state]} before:absolute before:w-2 before:h-2 before:bg-white-500 before:rounded-full before:top-[4px] before:left-[4px]`}></span>
-                        {textSpan[state]}
-                    </div>
-                    <div className="flex items-center gap-5">
-                        {chipState[state]}
-                        <div className="cursor-pointer" onClick={handleLaunchClick}>
-                            {iconState[state]}
+        <>
+            <section className="col-span-1 flex flex-row justify-between items-center gap-4 py-2 px-5 rounded-md bg-white-500 shadow md:py-4 md:p-10 xl:gap-6">
+                {data === null ? (
+                    <SyncLoader color="#3C3C3C" size={8} />
+                ) : (
+                    <>
+                        <div className='flex flex-wrap gap-2'>
+                            <h3 className="text-xl font-bold">{data.type}</h3>
+                            {state === 'inactif' && <InfoOptionLaunch optionsChoice={optionsChoice} />}
+                            {state === 'loading' && <Button href="http://localhost:4444/ui/#/sessions" blank={true} >Visualiser le test en direct</Button>}
                         </div>
-                    </div>
-                </>
-            )}
-        </section>
+                        <div className="flex items-center gap-2">
+                            <span className={`relative block w-4 h-4 rounded-full ${colorRound[state]} before:absolute before:w-2 before:h-2 before:bg-white-500 before:rounded-full before:top-[4px] before:left-[4px]`}></span>
+                            {textSpan[state]}
+                        </div>
+                        <div className="flex items-center gap-5">
+                            {chipState[state]}
+                            <div className="cursor-pointer" onClick={handleLaunchClick}>
+                                {iconState[state]}
+                            </div>
+                        </div>
+                    </>
+                )}
+            </section>
+
+            <LaunchOption data={data} onSelectOption={handleOptionsUpdate} />
+        </>
     );
 };
 

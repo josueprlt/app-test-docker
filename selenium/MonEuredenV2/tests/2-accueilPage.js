@@ -24,8 +24,8 @@ async function AccueilPage() {
     try {
         await executeStep(
             () => navigation(connexion.MonEuredenV2.url, driver),
-            '✅ Navigation réussie',
-            '❌ Échec de la navigation',
+            '🚢✅ Navigation réussie',
+            '🚢❌ Échec de la navigation',
             'Frontend',
             type
             
@@ -33,8 +33,8 @@ async function AccueilPage() {
 
         await executeStep(
             () => login(connexion.MonEuredenV2.mail, connexion.MonEuredenV2.password, driver),
-            '✅ Connexion réussie',
-            '❌ Échec de la connexion',
+            '🎨✅ Connexion réussie',
+            '🎨❌ Échec de la connexion',
             'Frontend',
             type
         );
@@ -44,8 +44,8 @@ async function AccueilPage() {
     } finally {
         await executeStep(
             () => exit(driver),
-            '✅ Navigateur fermé',
-            '❌ Échec de la fermeture du navigateur',
+            '🎨✅ Navigateur fermé',
+            '🎨❌ Échec de la fermeture du navigateur',
             'Frontend',
             type
         );

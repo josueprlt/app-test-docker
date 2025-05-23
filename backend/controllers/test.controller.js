@@ -14,7 +14,7 @@ exports.createTest = async (req, res) => {
 exports.getAllTests = async (req, res) => {
     try {
         const tests = await Test.findAll({
-            include: ['logs']
+            include: ['logs', 'options']
         });
         res.json(tests);
     } catch (err) {
@@ -26,7 +26,7 @@ exports.getValidTests = async (req, res) => {
     try {
         const tests = await Test.findAll({
             where: { valid: true },
-            include: ['logs']
+            include: ['logs', 'options']
         });
         res.json(tests);
     } catch (err) {
@@ -36,7 +36,7 @@ exports.getValidTests = async (req, res) => {
 
 exports.getTestById = async (req, res) => {
     try {
-        const test = await Test.findByPk(req.params.id, { include: ['logs'] });
+        const test = await Test.findByPk(req.params.id, { include: ['logs', 'options'] });
         if (!test) return res.status(404).json({ message: 'Test not found' });
         res.json(test);
     } catch (err) {
@@ -50,7 +50,7 @@ exports.getTestByType = async (req, res) => {
         // Si type est une chaîne de caractères, on le passe tel quel
         const tests = await Test.findAll({
             where: { type: typeParam, valid: true },  // Utilisation de la chaîne de caractères
-            include: ['logs']
+            include: ['logs', 'options']
         });
         if (!tests || tests.length === 0) {
             return res.status(404).json({ message: 'No tests found for this type' });
