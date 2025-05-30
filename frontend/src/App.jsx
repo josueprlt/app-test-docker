@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import AccueilPage from "./pages/AccueilPage";
+import TestsPage from "./pages/TestsPage";
 import TestPage from "./pages/TestPage";
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<AccueilPage data={data} allData={allData} />} />
+        <Route path="/tests" element={<TestsPage data={data} />} />
         <Route path="/test/:id" element={<TestPage />} />
       </Routes>
     </Router>

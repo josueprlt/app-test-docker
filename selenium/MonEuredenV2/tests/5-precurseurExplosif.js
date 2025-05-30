@@ -1,3 +1,4 @@
+const axios = require('axios');
 const { executeStep } = require('../utils/executeStep.js');
 const { navigation } = require('../steps/frontend/navigation.js');
 const { login } = require('../steps/frontend/login.js');
@@ -8,6 +9,7 @@ const { getConnexion } = require('../utils/getConnexion.js');
 const { waitForSelenium } = require('../utils/waitForSelenium.js');
 const { createTest } = require('../utils/createTest.js');
 const { updateSuccessOfTest } = require('../utils/updateSuccessOfTest.js');
+const { updateOptionsIdTest } = require('../utils/updateOptionsIdTest.js');
 const { PEbackProcessus } = require('../processes/backend/precurseurExplosif.js');
 const { pe_processus } = require('../processes/frontend/precurseurExplosif.js');
 const { createCommandLine } = require('../utils/createCommandLine.js');
@@ -57,7 +59,7 @@ async function PrecurseurExplosif(defaultSeller, defaultPI, defaultPE) {
             '🚢❌ Échec de la navigation',
             'Frontend',
             type
-            
+
         );
 
         await executeStep(
@@ -87,6 +89,7 @@ async function PrecurseurExplosif(defaultSeller, defaultPI, defaultPE) {
             type
         );
         await updateSuccessOfTest(type);
+        await updateOptionsIdTest(type);
     }
 }
 

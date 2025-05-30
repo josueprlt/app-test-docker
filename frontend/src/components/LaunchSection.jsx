@@ -1,17 +1,16 @@
-import { useState } from 'react'
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from 'react'
 import { IconPlay, IconPause } from "./icons";
+import { useNavigate } from "react-router-dom";
 import SyncLoader from "react-spinners/SyncLoader";
 import MoonLoader from "react-spinners/MoonLoader";
 import ChipDate from "./ChipDate";
-import LaunchOption from "./LaunchOption";
 import InfoOptionLaunch from "./InfoOptionLaunch";
 import Button from "./Button";
 
-const LaunchSection = ({ data }) => {
+const LaunchSection = ({ data, title = "", txtChipInactif = "", InfoOptions = 'visible', optionsChoice }) => {
     const navigate = useNavigate();
     const [state, setState] = useState('inactif');
-    const [optionsChoice, setOptionsChoice] = useState('');
+    const [dataTests, setDataTests] = useState({ tests: [] });
 
     const colorRound = {
         inactif: "bg-gray-700",
@@ -28,7 +27,7 @@ const LaunchSection = ({ data }) => {
     }
 
     const chipState = {
-        inactif: <ChipDate txt="Lancer le test" direction="right" icon="hidden" className="hidden md:flex" />,
+        inactif: <ChipDate txt={txtChipInactif ? txtChipInactif : "Lancer le test"} direction="right" icon="hidden" className="hidden md:flex" />,
         loading:
             <div className="flex items-center gap-2">
                 <MoonLoader color="#EBA800" size={14} />
@@ -43,43 +42,89 @@ const LaunchSection = ({ data }) => {
         loading: <IconPause />,
     }
 
-    const handleLaunchClick = () => {
-        if (state === 'inactif') {
-            setState('loading');
-            fetch('http://localhost:5001/api/launch/' + data.type, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ type: data.type }),
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Erreur réseau ou réponse non OK');
-                    }
-                    setState('success');
-                    setTimeout(() => {
-                        navigate("/");
-                        window.location.reload();
-                    }, 1500);
-                })
-                .catch(error => {
-                    setState('error');
-                    console.error('Erreur lors du lancement :', error);
-                    setTimeout(() => {
-                        navigate("/");
-                        window.location.reload();
-                    }, 1500);
-                });
-        } else {
-            setState('inactif');
-        }
+    const InfoOpts = {
+        visible: state === 'inactif' && <InfoOptionLaunch optionsChoice={optionsChoice} />,
+        hidden: '',
     }
 
-    const handleOptionsUpdate = (updatedChoices) => {
-        setOptionsChoice(updatedChoices);
-        console.log("Options choisies :", updatedChoices);
-    };
+    useEffect(() => {
+        if (data && optionsChoice) {
+            let ts = { tests: [] };
+
+            const validChoices = Array.isArray(optionsChoice)
+                ? optionsChoice.filter(choice => !choice.exclud)
+                : [];
+
+            const currentTests = Array.isArray(data) ? data : [data];
+
+            currentTests
+                .filter(item => !item.exclud) // ignore ceux exclus côté back
+                .forEach(item => {
+                    const relatedChoices = validChoices
+                        .filter(choice => choice.testName === item.type)
+                        .map(choice => choice.args);
+
+                    if (relatedChoices.length > 0) {
+                        relatedChoices.forEach(args => {
+                            ts.tests.push({ testName: item.type, args });
+                        });
+                    } else {
+                        ts.tests.push({ testName: item.type, args: [] });
+                    }
+                });
+
+            setDataTests(ts);
+        }
+    }, [data, optionsChoice]);
+
+    const handleLaunchClick = async () => {
+        if (state !== 'inactif') {
+            setState('inactif');
+            return;
+        }
+
+        setState('loading');
+
+        try {
+            const response = await fetch('http://localhost:4000/run', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dataTests),
+            });
+
+            if (!response.ok) throw new Error('Erreur réseau ou réponse non OK');
+
+            // Polling pour vérifier le statut de tous les tests
+            const checkStatus = async () => {
+                // Exemple d’endpoint qui renvoie un tableau d’états des tests
+                const res = await fetch(`http://localhost:5001/api/tests/status`);
+                const json = await res.json();
+
+                // Ici, tu vérifies que tous les tests sont terminés et leur succès
+                // Adapté à ta réponse, par exemple json = [{ type: ..., success: true/false }, ...]
+                const allDone = json.every(test => test.success === true || test.success === false);
+
+                if (allDone) {
+                    // Redirection après 1.5s
+                    setTimeout(() => {
+                        navigate("/");
+                        window.location.reload();
+                    }, 1500);
+                } else {
+                    // Si pas fini, relance le check dans 5s
+                    setTimeout(checkStatus, 5000);
+                }
+            };
+
+            setTimeout(checkStatus, 10000); // Délai initial avant polling
+        } catch (error) {
+            setState('error');
+            setTimeout(() => {
+                navigate("/");
+                window.location.reload();
+            }, 1500);
+        }
+    }
 
     return (
         <>
@@ -89,8 +134,8 @@ const LaunchSection = ({ data }) => {
                 ) : (
                     <>
                         <div className='flex flex-wrap gap-2'>
-                            <h3 className="text-xl font-bold">{data.type}</h3>
-                            {state === 'inactif' && <InfoOptionLaunch optionsChoice={optionsChoice} />}
+                            <h3 className="text-xl font-bold">{title ? title : data.type}</h3>
+                            {InfoOpts[InfoOptions]}
                             {state === 'loading' && <Button href="http://localhost:4444/ui/#/sessions" blank={true} >Visualiser le test en direct</Button>}
                         </div>
                         <div className="flex items-center gap-2">
@@ -99,15 +144,20 @@ const LaunchSection = ({ data }) => {
                         </div>
                         <div className="flex items-center gap-5">
                             {chipState[state]}
-                            <div className="cursor-pointer" onClick={handleLaunchClick}>
-                                {iconState[state]}
-                            </div>
+
+                            {state === 'loading' ? (
+                                <div>
+                                    {iconState[state]}
+                                </div>
+                            ) : (
+                                <div className="cursor-pointer" onClick={handleLaunchClick}>
+                                    {iconState[state]}
+                                </div>
+                            )}
                         </div>
                     </>
                 )}
             </section>
-
-            <LaunchOption data={data} onSelectOption={handleOptionsUpdate} />
         </>
     );
 };

@@ -1,4 +1,5 @@
 services:
+  # === Base de données PostgreSQL ===
   db:
     image: postgres:15
     container_name: database
@@ -11,6 +12,7 @@ services:
     ports:
       - "5432:5432"
 
+  # === Interface PGAdmin ===
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin
@@ -22,11 +24,12 @@ services:
     depends_on:
       - db
 
+  # === Backend Express ===
   backend:
     build: ./backend
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock # <== Pour lancer des tests via le front
     container_name: backend
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
       DB_HOST: ${DB_HOST}
       DB_USER: ${DB_USER}
@@ -37,6 +40,7 @@ services:
     depends_on:
       - db
 
+  # === Frontend React ===
   frontend:
     build: ./frontend
     container_name: frontend
@@ -50,6 +54,7 @@ services:
     depends_on:
       - backend
 
+  # === Test Runner (Node.js) ===
   test-runner:
     build:
       context: ./selenium
@@ -57,14 +62,38 @@ services:
     container_name: test-runner
     volumes:
       - .:/app
-    stdin_open: true # <== Pour terminal interactif
-    tty: true # <== Pour terminal interactif
+    working_dir: /app
+    ports:
+      - "4000:4000"
+    depends_on:
+      - selenium-hub
+    environment:
+      - SELENIUM_REMOTE_URL=http://selenium-hub:4444/wd/hub
 
-  selenium:
-    image: selenium/standalone-chrome
-    container_name: selenium
+  # === Selenium Grid Hub ===
+  selenium-hub:
+    image: selenium/hub:4.21.0-20240521
+    container_name: selenium-hub
     ports:
       - "4444:4444"
+    environment:
+      - SE_GRID_MAX_SESSION=10
+      - SE_SESSION_REQUEST_TIMEOUT=60
+      - SE_SESSION_RETRY_INTERVAL=2
+
+  # === Node Chrome ===
+  chrome-node:
+    image: selenium/node-chrome:4.21.0-20240521
+    container_name: chrome-node
+    depends_on:
+      - selenium-hub
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_MAX_SESSIONS=10
+      - SE_NODE_OVERRIDE_MAX_SESSIONS=true
+    shm_size: 2g
 
 volumes:
   pg_data:

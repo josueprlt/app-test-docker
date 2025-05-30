@@ -26,7 +26,7 @@ module.exports = async (db) => {
     await Option.create({
         testId: 2,
         question: 'L\'attestation Précuseur Explosif du tiers est-il valide, expiré ou sur une échéance de 3 mois ?',
-        choice: ["valide","expire", "echeance"]
+        choice: ["actif", "echeance", "expire"]
     });
 
     console.log('✅ Donnée fictive insérée.');

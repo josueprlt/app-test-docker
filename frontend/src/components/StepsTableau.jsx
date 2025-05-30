@@ -56,7 +56,7 @@ const StepsTableau = ({ logs, delay }) => {
                         <tr>
                             <td
                                 colSpan={stepsTableau.length}
-                                className="text-center py-4 text-black-500"
+                                className="text-center py-4 text-gray-600 italic"
                             >
                                 Aucun log à afficher
                             </td>

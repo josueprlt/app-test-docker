@@ -1,7 +1,4 @@
-const BarProgressComponent = ({ success, errors }) => {
-    console.log(success);
-    console.log(errors);
-    
+const BarProgressComponent = ({ success, errors }) => {    
     return (
         <>
             <section className="flex gap-[2px] h-[18px] rounded-full overflow-hidden">

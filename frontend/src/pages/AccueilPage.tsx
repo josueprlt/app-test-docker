@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import TestElement from "../components/TestElement";
 import ChartComponent from "../components/ChartComponent";
+import Button from "../components/Button";
 import SyncLoader from "react-spinners/SyncLoader";
 
 function AccueilPage({ data = null, allData = null }: {
@@ -154,6 +155,11 @@ function AccueilPage({ data = null, allData = null }: {
                         )}
                     </section>
                 )}
+
+                <section className="flex flex-wrap justify-between p-2 rounded-md bg-white-500 shadow">
+                    <h3 className="font-bold sm:text-2xl">Exécutez une série de tests</h3>
+                    <Button href={'/tests'} >S'y rendre</Button>
+                </section>
 
                 <section className="flex flex-col gap-2 p-2 rounded-md bg-white-500 shadow">
                     {data === null ? (

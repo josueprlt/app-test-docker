@@ -19,6 +19,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.BOOLEAN,
             defaultValue: true,
         },
+        exclud: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
     });
 
     Test.associate = (models) => {

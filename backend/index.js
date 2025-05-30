@@ -8,7 +8,6 @@ const port = process.env.PORT || 5000;
 const testRoutes = require('./routes/test.routes');
 const logRoutes = require('./routes/log.routes');
 const optionRoutes = require('./routes/option.routes');
-const launchRoutes = require('./routes/launch.routes');
 const db = require('./models'); // Import Sequelize + modèles
 
 app.use(cors());
@@ -16,7 +15,6 @@ app.use(express.json());
 app.use('/api/tests', testRoutes);
 app.use('/api/logs', logRoutes);
 app.use('/api/options', optionRoutes);
-app.use('/api/launch', launchRoutes);
 
 // Synchronise les modèles puis lance le serveur
 db.sequelize.sync({ alter: true }) // utilise { force: true } pour forcer un reset

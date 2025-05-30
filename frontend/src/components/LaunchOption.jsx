@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { IconInfo } from "./icons";
 import SyncLoader from "react-spinners/SyncLoader";
-import { Tooltip } from "@heroui/tooltip";
+import Tooltip from '@mui/material/Tooltip';
 
 const LaunchOption = ({ data, onSelectOption }) => {
     const [options, setOptions] = useState([]);
@@ -33,29 +33,50 @@ const LaunchOption = ({ data, onSelectOption }) => {
                 <>
                     <h3 className="text-xl text-center font-bold">Options de lancement</h3>
                     <div className='flex flex-row justify-between mt-5'>
-                        {options.map((option, index) => (
-                            <div key={index} className="flex flex-col items-center gap-2 py-2">
-                                <div className='flex items-center gap-2'>
-                                    <h4 className='font-semibold'>Option n°{index + 1}</h4>
-                                    <Tooltip content={option.question} color='default' closeDelay={0} showArrow={true}>
-                                        <IconInfo className="w-5 h-5 cursor-pointer" />
-                                    </Tooltip>
+                        {options.length > 1 ? (
+                            options.map((option, index) => (
+                                <div key={index} className="flex flex-col items-center gap-2 py-2">
+                                    <div className='flex items-center gap-2'>
+                                        <h4 className='font-semibold'>Option n°{index + 1}</h4>
+                                        <Tooltip
+                                            title={
+                                                <span style={{ color: '#fff', fontWeight: 'bold' }}>
+                                                    {option.question ? option.question : "Aucune question"}
+                                                </span>
+                                            }
+                                            placement='top'
+                                            arrow
+                                            componentsProps={{
+                                                tooltip: {
+                                                    sx: {
+                                                        backgroundColor: '#3C3C3C',
+                                                        color: '#fff',
+                                                        fontSize: '13px',
+                                                    }
+                                                }
+                                            }}
+                                        >
+                                            <IconInfo className="w-5 h-5 cursor-pointer" />
+                                        </Tooltip>
+                                    </div>
+                                    <select
+                                        name={`select-n-${index}`}
+                                        id={`select-n-${index}`}
+                                        className="select-options mt-2 block w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                        value={selectedOptions[index]}
+                                        onChange={(e) => handleChange(index, e.target.value)}
+                                    >
+                                        {option.choice.map((opt, i) => (
+                                            <option key={i} value={opt} className="text-gray-700">
+                                                {opt}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
-                                <select
-                                    name={`select-n-${index}`}
-                                    id={`select-n-${index}`}
-                                    className="select-options mt-2 block w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                                    value={selectedOptions[index]}
-                                    onChange={(e) => handleChange(index, e.target.value)}
-                                >
-                                    {option.choice.map((opt, i) => (
-                                        <option key={i} value={opt} className="text-gray-700">
-                                            {opt}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                        ))}
+                            ))
+                        ) : (
+                            <p className='w-full text-center italic text-gray-600'>Aucune option de lancement pour ce test</p>
+                        )}
                     </div>
                 </>
             )}

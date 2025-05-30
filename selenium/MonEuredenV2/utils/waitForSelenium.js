@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 async function waitForSelenium() {
-    const url = 'http://selenium:4444/wd/hub/status';
+    const url = 'http://selenium-hub:4444/wd/hub/status';
     for (let i = 0; i < 10; i++) {
         try {
             const res = await axios.get(url);

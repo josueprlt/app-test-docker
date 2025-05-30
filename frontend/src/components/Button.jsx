@@ -1,25 +1,35 @@
 import { IconArrow } from "./icons";
 
-const Button = ({ children, href = null, blank = false, icon = "arrow" }) => {
-
-    const classBtn = "flex items-center gap-1 px-2 text-xs font-semibold bg-blue-500 text-blue-300 rounded hover:bg-blue-600 transition cursor-pointer";
+const Button = ({ children, href = "", onClick = () => {}, blank = false, icon = "arrow", className = "" }) => {
+    
+    const classBtn = "flex items-center gap-1 px-2 font-semibold bg-blue-500 text-blue-300 rounded hover:bg-blue-600 transition cursor-pointer";
 
     const iconBtn = {
         arrow: <IconArrow className="h-4" />,
-    }
+        hidden: ''
+    };
 
-    if (href) {
+    if (href === "") {
         return (
-            <a href={href} target={blank ? '_blank' : ''} className={classBtn}>
+            <button
+                onClick={onClick}
+                className={`${classBtn} ${className}`}
+                type="button"
+            >
                 {children}
                 {iconBtn[icon]}
-            </a>
+            </button>
         );
     } else {
         return (
-            <button className={classBtn} type="button">
+            <a
+                href={href}
+                target={blank ? '_blank' : undefined}
+                className={`${classBtn} ${className}`}
+            >
                 {children}
-            </button>
+                {iconBtn[icon]}
+            </a>
         );
     }
 };

@@ -8,11 +8,13 @@ import { Link } from "react-router";
 import SyncLoader from "react-spinners/SyncLoader";
 import ChartComponent from "../components/ChartComponent";
 import LaunchSection from "../components/LaunchSection";
+import LaunchOption from "../components/LaunchOption";
 
 function TestPage() {
     let params = useParams()
     let idElt = params.id;
 
+    const [optionsChoice, setOptionsChoice] = useState([]);
     const [data, setData] = useState<any>(null);
     const [outputDate, setOutputDate] = useState<any>(null);
     const [successSteps, setSuccessSteps] = useState<any>(null);
@@ -21,7 +23,7 @@ function TestPage() {
         datasets: [],
     });
     const months = ["Jan.", "Fév.", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Sept.", "Oct.", "Nov.", "Déc."];
-
+    
     const options = {
         responsive: true,
         plugins: {
@@ -110,6 +112,10 @@ function TestPage() {
         setLineChartData(chartData);
     }, [data]);
 
+    const handleOptionsUpdate = (updatedChoice) => {
+        setOptionsChoice(updatedChoice);
+    };
+
     return (
         <>
             <main className="flex flex-col gap-2 p-2 bg-gray-500 text-black-500">
@@ -139,7 +145,8 @@ function TestPage() {
                     </div>
                 </section>
 
-                <LaunchSection data={data} />
+                <LaunchSection data={data} optionsChoice={optionsChoice} />
+                <LaunchOption data={data} onSelectOption={handleOptionsUpdate} />
 
                 <section className="grid grid-flow-col grid-col-3 gap-2">
                     <section className="col-span-1 flex flex-row items-center gap-4 p-2 rounded-md bg-white-500 shadow md:p-4 xl:gap-6">

@@ -15,7 +15,7 @@ async function getDriver() {
     let driver = await new Builder()
         .forBrowser('chrome')
         .setChromeOptions(options)
-        .usingServer('http://selenium:4444/wd/hub')
+        .usingServer("http://selenium-hub:4444/wd/hub")
         .build();
 
     return driver;

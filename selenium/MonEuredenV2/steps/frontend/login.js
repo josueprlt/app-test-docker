@@ -14,6 +14,9 @@ async function login(mail, password, driver) {
         // Attendre que le bouton de soumission soit cliquable et le cliquer
         const submitButton = await driver.wait(until.elementLocated(By.id('kc-login')), 15000);
         await submitButton.click();
+
+        const AgreeButton = await driver.wait(until.elementLocated(By.id('didomi-notice-agree-button')), 30000);
+        await AgreeButton.click();
     } catch (error) {
         generateError(error, '');
     }

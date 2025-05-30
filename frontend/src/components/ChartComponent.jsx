@@ -25,10 +25,10 @@ ChartJS.register(
 
 function ChartComponent({ title, data, options, type = 'line', props = string }) {
   return (
-    <div className={`flex flex-col justify-center p-2 ${props}`}>
+    <div className={`flex justify-center flex-col justify-center p-2 ${props}`}>
       <h2 className="text-center text-lg font-semibold mb-2">{title}</h2>
-      {type === 'line' && <Line data={data} options={options} />}
-      {type === 'doughnut' && <Doughnut data={data} options={options} />}
+      {type === 'line' && <Line className='max-h-[500px]' data={data} options={options} />}
+      {type === 'doughnut' && <Doughnut className='max-h-[500px]' data={data} options={options} />}
     </div>
   );
 }
