@@ -4,8 +4,10 @@ async function createLogByIdTest(message, type, provenance, success) {
     const baseUrl = 'http://host.docker.internal:5001';
 
     try {
-        // Recherche du test par type
-        const { data: existingTests } = await axios.get(`${baseUrl}/api/tests/type/${type}`);
+        // Recherche du test par type (GET avec params)
+        const { data: existingTests } = await axios.get(`${baseUrl}/api/tests/type`, {
+            params: { type: type }
+        });
 
         if (existingTests && existingTests.length > 0) {
             const idTest = existingTests[0].id || existingTests[0]._id;
@@ -17,7 +19,11 @@ async function createLogByIdTest(message, type, provenance, success) {
             });
         }
     } catch (error) {
-        console.error(`❌ Erreur inattendue lors de la création du log :`, error.message);
+        if (error.response) {
+            console.error(`❌ Erreur lors de la création du log :`, error.message, error.response.data);
+        } else {
+            console.error(`❌ Erreur inattendue lors de la création du log :`, error.message);
+        }
     }
 }
 

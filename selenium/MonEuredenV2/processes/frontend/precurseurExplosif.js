@@ -62,7 +62,7 @@ async function pe_processus(driver, seller, etatPI, etatPE, type) {
             }
         }
     } catch (error) {
-        generateError(error, '❌ Erreur dans pe_processus :');
+        generateError(error, '');
     }
 }
 

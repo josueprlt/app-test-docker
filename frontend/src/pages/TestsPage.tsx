@@ -2,16 +2,29 @@ import { useState, useEffect } from "react";
 import { IconBack } from "../components/icons";
 import CardComponent from "../components/CardComponent";
 import LaunchSection from "../components/LaunchSection";
+import Button from "../components/Button";
 import { Link } from "react-router";
 import SyncLoader from "react-spinners/SyncLoader";
+import PlanModal from "../components/modals/PlanModal";
 
 function TestsPage({ data = null }: {
     data: { id: number; name: string; type: string; description: string; exclud: boolean; updatedAt: string; success: boolean; logs: []; options: [] }[] | null
 }) {
     const [tests, setTests] = useState<typeof data>(data);
+    const [plans, setPlans] = useState(null);
     const [choiceOptions, setChoiceOptions] = useState([]);
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
 
-    // Met à jour l'état local si data change (ex: lors du chargement initial)
+    useEffect(() => {
+        fetch('http://localhost:5001/api/plans/all')
+            .then(response => response.json())
+            .then(data => setPlans(data))
+            .catch(error => console.error('Error fetching plans:', error));
+    }, []);
+    console.log(plans);
+
     useEffect(() => {
         setTests(data);
     }, [data]);
@@ -49,11 +62,11 @@ function TestsPage({ data = null }: {
                 </div>
             </section>
 
-            <LaunchSection data={tests} optionsChoice={choiceOptions} title="Tests sélectionnés" txtChipInactif="Lancez tous les tests" InfoOptions="hidden" />
+            <LaunchSection data={tests} title="Tests sélectionnés" txtChipInactif="Lancez tous les tests" />
 
             <section className="w-full p-2 rounded-md bg-white-500 shadow">
                 <h2 className="text-lg font-bold py-2">Test(s) en file d'attente :</h2>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                     {tests === null ? (
                         <SyncLoader color="#3C3C3C" size={8} />
                     ) : (
@@ -64,7 +77,7 @@ function TestsPage({ data = null }: {
                                 .filter(dt => dt.exclud === false)
                                 .map((dt) => (
                                     <div key={dt.id}>
-                                        <CardComponent onClick={() => toggleExclud(dt.id)} title={dt.name} description={dt.description} excluded={dt.exclud} opts={dt.options} choiceOptions={choiceOptions} setChoiceOptions={setChoiceOptions} testName={dt.type} />
+                                        <CardComponent onClick={() => toggleExclud(dt.id)} title={dt.name} description={dt.description} excluded={dt.exclud} choiceOptions={choiceOptions} setChoiceOptions={setChoiceOptions} testName={dt.type} />
                                     </div>
                                 ))
                         )
@@ -72,7 +85,7 @@ function TestsPage({ data = null }: {
                 </div>
 
                 <h2 className="text-lg font-bold py-2 pt-8">Test(s) exclus :</h2>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                     {tests === null ? (
                         <SyncLoader color="#3C3C3C" size={8} />
                     ) : (
@@ -83,11 +96,26 @@ function TestsPage({ data = null }: {
                                 .filter(dt => dt.exclud === true)
                                 .map((dt) => (
                                     <div key={dt.id}>
-                                        <CardComponent onClick={() => toggleExclud(dt.id)} title={dt.name} description={dt.description} excluded={dt.exclud} opts={dt.options} choiceOptions={choiceOptions} setChoiceOptions={setChoiceOptions} testName={dt.type} />
+                                        <CardComponent onClick={() => toggleExclud(dt.id)} title={dt.name} description={dt.description} excluded={dt.exclud} choiceOptions={choiceOptions} setChoiceOptions={setChoiceOptions} testName={dt.type} />
                                     </div>
                                 ))
                         )
                     )}
+                </div>
+            </section>
+
+            <section className="p-2 rounded-md bg-white-500 shadow">
+                <div className="flex flex-wrap justify-between">
+                    <h3 className="font-bold sm:text-2xl">Planifiez une batterie de tests</h3>
+                    <Button onClick={handleOpen} >Planifiez</Button>
+                    <PlanModal
+                        open={open}
+                        handleClose={handleClose}
+                        data={tests}
+                    />
+
+                    <div>
+                    </div>
                 </div>
             </section>
         </main>

@@ -9,16 +9,15 @@ const { getConnexion } = require('../utils/getConnexion.js');
 const { waitForSelenium } = require('../utils/waitForSelenium.js');
 const { createTest } = require('../utils/createTest.js');
 const { updateSuccessOfTest } = require('../utils/updateSuccessOfTest.js');
-const { updateOptionsIdTest } = require('../utils/updateOptionsIdTest.js');
 const { PEbackProcessus } = require('../processes/backend/precurseurExplosif.js');
 const { pe_processus } = require('../processes/frontend/precurseurExplosif.js');
 const { createCommandLine } = require('../utils/createCommandLine.js');
 
 async function PrecurseurExplosif(defaultSeller, defaultPI, defaultPE) {
-    const type = "5-precurseurExplosif";
+    const type = `5-precurseurExplosif-[${defaultSeller}/${defaultPI}/${defaultPE}]`;
     await waitForSelenium();
     await createTest(
-        "Parcours Signature Précurseur Explosif",
+        `Parcours Signature PE ${defaultSeller}/${defaultPI}/${defaultPE}`,
         "Vérifie le parcours de signature d'un précurseur explosif dans l'application MonEureden V2",
         type
     );
@@ -89,7 +88,6 @@ async function PrecurseurExplosif(defaultSeller, defaultPI, defaultPE) {
             type
         );
         await updateSuccessOfTest(type);
-        await updateOptionsIdTest(type);
     }
 }
 

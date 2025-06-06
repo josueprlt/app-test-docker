@@ -4,7 +4,9 @@ async function updateOptionsIdTest(type) {
     const baseUrl = 'http://host.docker.internal:5001';
 
     try {
-        const { data } = await axios.get(`${baseUrl}/api/tests/type/all/${type}`);
+        const { data } = await axios.get(`${baseUrl}/api/tests/type/all`, {
+            params: { type: type }
+        });
         newID = data[0].id;
         oldID = data[1].id;
 

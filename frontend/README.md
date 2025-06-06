@@ -1,12 +1,48 @@
-# React + Vite
+# 📡 Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 📑 **Installation du dossier Frontend**
 
-Currently, two official plugins are available:
+1. **Installez les dépendances** :
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+   ```bash
+   cd ..\frontend\
+   npm install
+   ```
 
-## Expanding the ESLint configuration
+## 📝 **Structure du dossier**
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+    .
+    ├── README.md           # Ce fichier
+    ├── Dockerfile          # fichier contenant les instructions nécessaires de création d'une image
+    │
+    ├── public            # Dossier public du projet
+    ├── src               # Dossier source du projet
+    │   ├── assets            # Dossier assets
+    │   ├── components            # Dossier contenant les composants
+    │   ├── pages            # Dossier contenant les pages principales du projet
+    │   └── utils            # Dossier contenant les utilitaires
+    │
+    ├── App.jsx             # Fichier principal
+    ├── index.css           # Contient le thème du projet
+    └── main.jsx            # Fichier recensant les routes du projet
+
+## 🔧 **Technos utilisées _(détaillées)_**
+
+Pour le frontend : 
+    - React.js
+    - TailwindCSS (Framework)
+    - _@emotion/react_
+    - _@emotion/styled_
+    - _@mui/material_
+    - _@tailwindcss/vite_
+    - _chart.js_
+    - _react_
+    - _react-chartjs-2_
+    - _react-dom_
+    - _react-router-dom_
+    - _react-spinners_
+    - _tailwindcss_
+
+---
+
+*Dernière mise à jour faite le 05 juin 2025 à 10:07*

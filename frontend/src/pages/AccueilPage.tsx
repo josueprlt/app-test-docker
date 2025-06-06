@@ -1,11 +1,13 @@
 import { useState, useEffect, useMemo } from "react";
-import TestElement from "../components/TestElement";
+import TestElement from "../components/elements/TestElement";
 import ChartComponent from "../components/ChartComponent";
 import Button from "../components/Button";
 import SyncLoader from "react-spinners/SyncLoader";
+import optionsDoughnut from "../components/optionsChart/optionsDoughnut";
+import optionsLineHome from "../components/optionsChart/optionsLineHome";
 
 function AccueilPage({ data = null, allData = null }: {
-    data: { id: number; name: string; updatedAt: string; success: boolean; logs: [] }[] | null,
+    data: { id: number; name: string; type: string; createdAt: string; success: boolean; logs: [] }[] | null,
     allData?: { id: number; name: string; createdAt: string; updatedAt: string; success: boolean; logs: [] }[] | null
 }) {
     const [successAllTests, setSuccessAllTests] = useState(0);
@@ -25,40 +27,6 @@ function AccueilPage({ data = null, allData = null }: {
             },
         ],
     }), [successAllTests, errorsAllTests]);
-
-    const optionsDoughnut = {
-        responsive: true,
-        plugins: {
-            legend: {
-                position: 'top',
-            },
-        },
-    };
-
-    const optionsLine = {
-        responsive: true,
-        plugins: {
-            legend: {
-                position: 'top',
-            },
-        },
-        scales: {
-            x: {
-                display: true,
-                title: {
-                    display: true,
-                    text: 'Date'
-                },
-            },
-            y: {
-                display: true,
-                title: {
-                    display: true,
-                    text: 'Test(s)'
-                }
-            }
-        }
-    };
 
     useEffect(() => {
         if (allData) {
@@ -141,7 +109,7 @@ function AccueilPage({ data = null, allData = null }: {
                         {(successAllTests || errorsAllTests) ? (
                             <>
                                 <ChartComponent title="Proportion totale de cas de tests réussi(s) et échoué(s)" data={doughnutAllData} options={optionsDoughnut} type="doughnut" props={"w-full sm:w-1/2"} />
-                                <ChartComponent title="Historique total de l'activité de test" data={lineChartAllData} options={optionsLine} props={"w-full sm:w-1/2"} />
+                                <ChartComponent title="Historique total de l'activité de test" data={lineChartAllData} options={optionsLineHome} type="homeLine" props={"w-full sm:w-1/2"} />
                             </>
                         ) : (
                             <>
@@ -168,9 +136,60 @@ function AccueilPage({ data = null, allData = null }: {
                         </>
                     ) : (
                         <>
-                            {data.map((dt, index) => (
-                                <TestElement key={index} index={index + 1} id={dt.id} title={dt.name} date={dt.updatedAt} success={dt.success} logs={dt.logs} />
-                            ))}
+                            {(() => {
+                                // Grouper les tests par type extrait
+                                const typeRegex = /^([^\[]+)/;
+                                const grouped = data.reduce<Record<string, typeof data>>((acc, dt) => {
+                                    const match = dt.type.match(typeRegex);
+                                    const extractedType = match ? match[1].replace(/-$/, '').trim() : '';
+                                    if (!acc[extractedType]) acc[extractedType] = [];
+                                    acc[extractedType].push(dt);
+                                    return acc;
+                                }, {});
+
+                                // Afficher chaque groupe
+                                return Object.entries(grouped).map(([extractedType, tests], groupIdx) => {
+                                    const groupSuccess = tests.every(t => t.success);
+                                    let realName = '';
+                                    if (extractedType === '5-precurseurExplosif') {
+                                        realName = "Parcours de Signature Précurseur Explosif";
+                                    }
+                                    
+                                    if (tests.length === 1) {
+                                        const dt = tests[0];
+                                        return (
+                                            <TestElement
+                                                key={dt.id}
+                                                index={groupIdx + 1}
+                                                id={dt.id}
+                                                title={dt.name}
+                                                date={dt.createdAt}
+                                                success={dt.success}
+                                                logs={dt.logs}
+                                            />
+                                        );
+                                    } else {
+                                        // Récupérer la date updatedAt la plus récente du groupe
+                                        const latestDate = tests.reduce((max, t) =>
+                                            new Date(t.createdAt) > new Date(max) ? t.createdAt : max,
+                                            tests[0].createdAt
+                                        );
+                                        const idTest = grouped[extractedType][0].id;
+                                        return (
+                                            <TestElement
+                                                key={extractedType}
+                                                index={groupIdx + 1}
+                                                id={idTest}
+                                                title={realName}
+                                                date={latestDate}
+                                                success={groupSuccess}
+                                                mode="group"
+                                                nbrsOfTests={tests.length}
+                                            />
+                                        );
+                                    }
+                                });
+                            })()}
                         </>
                     )}
                 </section>

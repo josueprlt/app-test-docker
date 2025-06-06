@@ -21,6 +21,7 @@ app.post("/run", (req, res) => {
         const argsStr = args.join(" ");
         const command = `node selenium/MonEuredenV2/tests/${testName}.js ${argsStr}`;
 
+        console.log(command);
         console.log(`${new Date().toISOString()} Lancement du test ${testName} (${testId}) avec args [${args.join(", ")}]`);
 
         const child = exec(command, (error, stdout, stderr) => {

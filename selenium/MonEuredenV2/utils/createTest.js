@@ -5,7 +5,9 @@ async function createTest(name, description, type, success = null) {
 
     try {
         // Mettre à jour tous les tests du même type pour passer 'valid' à false
-        await axios.put(`${baseUrl}/type/invalidate/${type}`);
+        await axios.put(`${baseUrl}/type/invalidate`, {
+            type: type
+        });
 
         await axios.post(`${baseUrl}`, {
             name: name,

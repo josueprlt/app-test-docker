@@ -23,25 +23,18 @@ Avant de commencer, assurez-vous d'avoir installé les éléments suivants :
    git checkout dev_2.0.0
    ```
 
-3. **Installez les dépendances dans tous les dossiers** :
+3. **Suite de l'installation pour chaque dossier** :
 
-    _Pour le dossier **backend** :_
-   ```bash
-   cd .\test-mon-eureden-v2\backend\
-   npm install
-   ```
+    Rendez-vous sur le `README.md` présent dans chaque dossier via les liens ci-dessous.
 
-    _Pour le dossier **frontend** :_
-   ```bash
-   cd ..\frontend\
-   npm install
-   ```
+    _Pour le dossier **backend** :_  
+    [Accéder au README](./backend/README.md)
+
+    _Pour le dossier **frontend** :_  
+    [Accéder au README](./frontend/README.md)
    
-    _Pour le dossier **selenium-tests** :_
-   ```bash
-   cd ..\selenium-tests\
-   npm install
-   ```
+    _Pour le dossier **selenium** :_  
+    [Accéder au README](./selenium/README.md)
 
 4. **Configurez les informations de connexion dans le .env** :
 
@@ -61,38 +54,25 @@ Avant de commencer, assurez-vous d'avoir installé les éléments suivants :
     DB_NAME=
     ```
 
-5. **Configurez le .env dans le backend** :
-
-    Dupliquez le fichier `.env.example` en `.env` à la racine du dossier **backend**, puis renseignez-y les variables d’environnement liées aux informations de connexion, à la **base de donnée** :
-
-    ```.env
-    DB_HOST=
-    DB_USER=
-    DB_PASSWORD=
-    DB_NAME=
-    DB_PORT=
-    PORT=
-    ```
-
-6. **Configurez le .env dans le dossier selenium-tests** :
-
-    Dupliquez le fichier `.env.example` en `.env` à la racine du dossier **selenium-tests**, puis renseignez-y les variables d’environnement liées aux urls de test et aux informations de connexion aux **site de tests** :
-
-    ```.env
-    BACKURL=
-    ```
-
 7. **Lancez le projet docker** :
 
-    _Assurez vous que **docker** est actif sur votre machine :_
+    Assurez-vous que **Docker** est bien démarré sur votre machine, puis exécutez la commande suivante à la racine du projet :
    ```bash
-   cd ../
    docker-compose up --build
    ```
 
 8. **Accèdez au tableau de bord des rapport de tests** :
 
-   Lien vers le tableau de bord : [localhost:5173](http://localhost:5173/)
+    Lorsque tous les **conteneurs Docker** sont correctement lancés et que vous voyez ces messages dans la console :
+
+    - `✅ Modèles synchronisés avec la base de données`
+    - `✅ Backend running on port 5001`
+
+    Cela signifie que le backend est opérationnel et que vous pouvez commencer à naviguer sur les différentes interfaces du projet :
+
+    - Lien vers le tableau de bord : [localhost:5173](http://localhost:5173/)
+    - Lien vers Selenium Grid pour observer les tests : [localhost:4444](http://localhost:4444/)
+    - Lien vers PgAdmin pour la bdd : [localhost:8080](http://localhost:8080/)
 
 
 ## 🌿 **Gestion du Dépôt GitLab**
@@ -120,7 +100,7 @@ Le projet utilise **GitLab** pour le versionnement du code. Voici la structure d
     │
     ├── backend                 # Container backend
     ├── frontend                # Container frontend
-    └── selenium-tests          # Container des tests selenium
+    └── selenium                # Container des tests selenium
 
 
 ## 🔧 **Technos utilisées**
@@ -133,7 +113,7 @@ Le projet utilise **GitLab** pour le versionnement du code. Voici la structure d
     - React.js
     - TailwindCSS (Framework)
 
-3. Pour selenium-tests : 
+3. Pour selenium : 
     - Node.js
     - Selenium (Librairie)
 
@@ -150,4 +130,4 @@ Pour éviter ce problème, assurez-vous que l'URL ressemble à l'exemple suivant
 
 ---
 
-*Dernière mise à jour faite le 14 mai 2025 à 17:09*
+*Dernière mise à jour faite le 05 juin 2025 à 10:19*

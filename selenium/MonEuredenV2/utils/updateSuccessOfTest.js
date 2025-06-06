@@ -5,7 +5,9 @@ async function updateSuccessOfTest(type) {
 
     try {
         // Recherche du test par type
-        const { data: existingTests } = await axios.get(`${baseUrl}/api/tests/type/${type}`);
+        const { data: existingTests } = await axios.get(`${baseUrl}/api/tests/type`, {
+            params: { type: type }
+        });
 
         if (existingTests && existingTests.length > 0) {
 

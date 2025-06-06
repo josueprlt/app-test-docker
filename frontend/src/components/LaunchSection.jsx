@@ -3,14 +3,17 @@ import { IconPlay, IconPause } from "./icons";
 import { useNavigate } from "react-router-dom";
 import SyncLoader from "react-spinners/SyncLoader";
 import MoonLoader from "react-spinners/MoonLoader";
-import ChipDate from "./ChipDate";
 import InfoOptionLaunch from "./InfoOptionLaunch";
+import ChipDate from "./ChipDate";
 import Button from "./Button";
 
-const LaunchSection = ({ data, title = "", txtChipInactif = "", InfoOptions = 'visible', optionsChoice }) => {
+const LaunchSection = ({ data, title = "", txtChipInactif = "", mode = "all" }) => {
     const navigate = useNavigate();
     const [state, setState] = useState('inactif');
     const [dataTests, setDataTests] = useState({ tests: [] });
+    const [typeTest, setTypeTest] = useState(null);
+    const [baseType, setBaseType] = useState(null);
+    const [argsType, setArgsType] = useState([]);
 
     const colorRound = {
         inactif: "bg-gray-700",
@@ -27,14 +30,14 @@ const LaunchSection = ({ data, title = "", txtChipInactif = "", InfoOptions = 'v
     }
 
     const chipState = {
-        inactif: <ChipDate txt={txtChipInactif ? txtChipInactif : "Lancer le test"} direction="right" icon="hidden" className="hidden md:flex" />,
+        inactif: <ChipDate txt={txtChipInactif ? txtChipInactif : "Lancer le test"} direction="right" icon="hidden" className="hidden md:flex px-2 py-1 rounded-md" />,
         loading:
             <div className="flex items-center gap-2">
                 <MoonLoader color="#EBA800" size={14} />
-                <ChipDate txt="Cela peut prendre plusieurs secondes" direction="right" icon="hidden" color="orange" className="hidden md:flex" />
+                <ChipDate txt="Cela peut prendre plusieurs secondes" direction="right" icon="hidden" color="orange" className="hidden md:flex px-2 py-1 rounded-md" />
             </div>,
-        error: <ChipDate txt="Erreur durant le lancement du test" direction="hidden" icon="cross" color='red' className="hidden md:flex" />,
-        success: <ChipDate txt="Le test c'est bien déroulé" direction="hidden" icon="check" color='green' className="hidden md:flex" />,
+        error: <ChipDate txt="Erreur durant le lancement du test" direction="hidden" icon="cross" color='red' className="hidden md:flex px-2 py-1 rounded-md" />,
+        success: <ChipDate txt="Le test c'est bien déroulé" direction="hidden" icon="check" color='green' className="hidden md:flex px-2 py-1 rounded-md" />,
     }
 
     const iconState = {
@@ -42,47 +45,47 @@ const LaunchSection = ({ data, title = "", txtChipInactif = "", InfoOptions = 'v
         loading: <IconPause />,
     }
 
-    const InfoOpts = {
-        visible: state === 'inactif' && <InfoOptionLaunch optionsChoice={optionsChoice} />,
-        hidden: '',
-    }
-
     useEffect(() => {
-        if (data && optionsChoice) {
-            let ts = { tests: [] };
+        let ts = { tests: [] };
+        if (data) {
+            let values = [];
 
-            const validChoices = Array.isArray(optionsChoice)
-                ? optionsChoice.filter(choice => !choice.exclud)
-                : [];
+            data.forEach(test => {
+                if (mode !== 'all') setTypeTest(test.type);
 
-            const currentTests = Array.isArray(data) ? data : [data];
+                const regex = /\[([^\]]+)\]/;
 
-            currentTests
-                .filter(item => !item.exclud) // ignore ceux exclus côté back
-                .forEach(item => {
-                    const relatedChoices = validChoices
-                        .filter(choice => choice.testName === item.type)
-                        .map(choice => choice.args);
+                const str = test.type;
+                const base = str.split("-[")[0];
 
-                    if (relatedChoices.length > 0) {
-                        relatedChoices.forEach(args => {
-                            ts.tests.push({ testName: item.type, args });
-                        });
-                    } else {
-                        ts.tests.push({ testName: item.type, args: [] });
-                    }
-                });
+                const match = str.match(regex);
+                if (match && match[1]) {
+                    values = match[1].split('/').map(v => v.trim());
+                } else {
+                    values = [];
+                }
+
+                if (values.length > 0) {
+                    ts.tests.push({ testName: base, args: values });
+                } else {
+                    ts.tests.push({ testName: base, args: [] });
+                }
+
+                setBaseType(base);
+                setArgsType(values);
+            });
 
             setDataTests(ts);
         }
-    }, [data, optionsChoice]);
+    }, [data]);
 
     const handleLaunchClick = async () => {
+        console.log(dataTests);
+
         if (state !== 'inactif') {
             setState('inactif');
             return;
         }
-
         setState('loading');
 
         try {
@@ -94,29 +97,33 @@ const LaunchSection = ({ data, title = "", txtChipInactif = "", InfoOptions = 'v
 
             if (!response.ok) throw new Error('Erreur réseau ou réponse non OK');
 
-            // Polling pour vérifier le statut de tous les tests
             const checkStatus = async () => {
-                // Exemple d’endpoint qui renvoie un tableau d’états des tests
-                const res = await fetch(`http://localhost:5001/api/tests/status`);
-                const json = await res.json();
-
-                // Ici, tu vérifies que tous les tests sont terminés et leur succès
-                // Adapté à ta réponse, par exemple json = [{ type: ..., success: true/false }, ...]
-                const allDone = json.every(test => test.success === true || test.success === false);
+                let res;
+                let json;
+                let allDone;
+                if (mode !== 'all') {
+                    res = await fetch(`http://localhost:5001/api/tests/type?type=${encodeURIComponent(typeTest)}`);
+                    json = await res.json();
+                    allDone = typeof json[0]?.success === "boolean";
+                } else {
+                    // Exemple d’endpoint qui renvoie un tableau d’états des tests
+                    res = await fetch(`http://localhost:5001/api/tests/status/status`);
+                    json = await res.json();
+                    // Vérifies que tous les tests sont terminés et qu'ils ont leur succès
+                    allDone = json.every(test => test.success === true || test.success === false);
+                }
 
                 if (allDone) {
-                    // Redirection après 1.5s
                     setTimeout(() => {
                         navigate("/");
                         window.location.reload();
                     }, 1500);
                 } else {
-                    // Si pas fini, relance le check dans 5s
                     setTimeout(checkStatus, 5000);
                 }
             };
 
-            setTimeout(checkStatus, 10000); // Délai initial avant polling
+            setTimeout(checkStatus, 10000);
         } catch (error) {
             setState('error');
             setTimeout(() => {
@@ -134,8 +141,8 @@ const LaunchSection = ({ data, title = "", txtChipInactif = "", InfoOptions = 'v
                 ) : (
                     <>
                         <div className='flex flex-wrap gap-2'>
-                            <h3 className="text-xl font-bold">{title ? title : data.type}</h3>
-                            {InfoOpts[InfoOptions]}
+                            <h3 className="text-xl font-bold">{title !== "" ? title : baseType}</h3>
+                            <InfoOptionLaunch optionsChoice={argsType} />
                             {state === 'loading' && <Button href="http://localhost:4444/ui/#/sessions" blank={true} >Visualiser le test en direct</Button>}
                         </div>
                         <div className="flex items-center gap-2">
