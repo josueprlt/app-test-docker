@@ -39,14 +39,23 @@ function TestPage() {
     useEffect(() => {
         if (!allData || !data || !data.type) return;
 
-        setOutputDate(`le ${new Date(data.updatedAt).getDate()} ${months[new Date(data.updatedAt).getMonth()]} ${new Date(data.updatedAt).getFullYear()} à ${new Date(data.updatedAt).getHours()}h${new Date(data.updatedAt).getMinutes()}`);
-
         const prefix = data.type.split('[')[0];
         const typeRegex = new RegExp(`^${prefix}`, "i");
 
         const matches = allData.filter(test => typeRegex.test(test.type));
         setFilterData(matches);
     }, [allData, data]);
+
+    useEffect(() => {
+        if (!data || !data.type) return;
+
+        if (selectData) {
+            console.log(selectData);
+            setOutputDate(`le ${new Date(selectData[0].updatedAt).getDate()} ${months[new Date(selectData[0].updatedAt).getMonth()]} ${new Date(selectData[0].updatedAt).getFullYear()} à ${new Date(selectData[0].updatedAt).getHours()}h${new Date(selectData[0].updatedAt).getMinutes()}`);
+        } else {
+            setOutputDate(`le ${new Date(data.updatedAt).getDate()} ${months[new Date(data.updatedAt).getMonth()]} ${new Date(data.updatedAt).getFullYear()} à ${new Date(data.updatedAt).getHours()}h${new Date(data.updatedAt).getMinutes()}`);
+        }
+    }, [selectData, data]);
 
     const ChangeInfoTest = (id) => {
         const selectDt = allData.filter(dt => dt.id === id)
@@ -66,7 +75,7 @@ function TestPage() {
                             {data === null ? (
                                 <SyncLoader color="#3C3C3C" size={8} />
                             ) : (
-                                <h1 className="text-xl font-bold text-center py-2 sm:text-2xl md:text-4xl">{data.name}</h1>
+                                <h1 className="text-xl font-bold text-center py-2 sm:text-2xl md:text-4xl">{selectData ? selectData[0].name : data.name}</h1>
                             )}
                         </div>
                     </div>
@@ -75,7 +84,7 @@ function TestPage() {
                             <SyncLoader color="#3C3C3C" size={8} />
                         ) : (
                             <>
-                                <p className='mb-5'>{data.description}</p>
+                                <p className='mb-5'>{selectData ? selectData[0].description : data.description}</p>
                                 <Link to="testest" className='text-blue-500 underline'>url de test</Link>
                                 <p>Rapport généré {outputDate}</p>
                             </>

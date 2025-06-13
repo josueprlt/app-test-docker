@@ -3,28 +3,28 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import AccueilPage from "./pages/AccueilPage";
 import TestsPage from "./pages/TestsPage";
 import TestPage from "./pages/TestPage";
+import { fetchTests } from './api/test/GetTests.jsx';
+import { fetchAllTests } from './api/test/GetAllTests.jsx';
 
 function App() {
-  const [data, setData] = useState(null);
-  const [allData, setAllData] = useState(null);
+  const [tests, setTests] = useState(null);
+  const [allTests, setAllTests] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:5001/api/tests')
-      .then(response => response.json())
-      .then(data => setData(data))
-      .catch(error => console.error('Error fetching tests:', error));
+    fetchTests()
+        .then(setTests)
+        .catch((err) => console.error('Error fetching tests:', err));
 
-    fetch('http://localhost:5001/api/tests/all')
-      .then(response => response.json())
-      .then(data => setAllData(data))
-      .catch(error => console.error('Error fetching all tests:', error));
+    fetchAllTests()
+        .then(setAllTests)
+        .catch((err) => console.error('Error fetching all tests:', err));
   }, []);
 
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<AccueilPage data={data} allData={allData} />} />
-        <Route path="/tests" element={<TestsPage data={data} />} />
+        <Route path="/" element={<AccueilPage data={tests} allData={allTests} />} />
+        <Route path="/tests" element={<TestsPage data={tests} />} />
         <Route path="/test/:id" element={<TestPage />} />
       </Routes>
     </Router>

@@ -20,7 +20,7 @@ const TestElement = ({ id = 0, index, title, date, success, logs = [], mode = "d
 
         if (date) {
             setConvDate(`Le ${new Date(date).getDate()} ${months[new Date(date).getMonth()]} ${new Date(date).getFullYear()} à ${new Date(date).getHours()}h`);
-            setConvDate2(DiffBetweenTwoDates(date));
+            setConvDate2(DiffBetweenTwoDates('Il y a', date));
         }
     }, []);
 

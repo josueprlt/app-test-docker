@@ -10,6 +10,20 @@ module.exports = (sequelize, DataTypes) => {
         dateTimeLaunch: {
             type: DataTypes.DATE,
         },
+        repeatUnit: {
+            type: DataTypes.TEXT,
+        },
+        repeatEvery: {
+            type: DataTypes.INTEGER,
+        },
+        valid: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: true,
+        },
+        version: {
+            type: DataTypes.INTEGER,
+            defaultValue: 1,
+        },
     });
 
     Plan.associate = (models) => {

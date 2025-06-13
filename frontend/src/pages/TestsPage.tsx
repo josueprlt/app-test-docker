@@ -5,7 +5,8 @@ import LaunchSection from "../components/LaunchSection";
 import Button from "../components/Button";
 import { Link } from "react-router";
 import SyncLoader from "react-spinners/SyncLoader";
-import PlanModal from "../components/modals/PlanModal";
+import PlanModals from "../components/modals/PlanModals";
+import PlanElement from "../components/elements/PlanElement";
 
 function TestsPage({ data = null }: {
     data: { id: number; name: string; type: string; description: string; exclud: boolean; updatedAt: string; success: boolean; logs: []; options: [] }[] | null
@@ -23,18 +24,16 @@ function TestsPage({ data = null }: {
             .then(data => setPlans(data))
             .catch(error => console.error('Error fetching plans:', error));
     }, []);
-    console.log(plans);
 
     useEffect(() => {
         setTests(data);
     }, [data]);
 
     useEffect(() => {
-        console.log(tests);
-        console.log(choiceOptions);
     }, [tests, choiceOptions]);
 
     // Fonction pour basculer le statut exclud d'un test
+    // @ts-ignore
     const toggleExclud = async (id: number) => {
         await fetch(`http://localhost:5001/api/tests/exclud/${id}`, {
             method: 'PUT'
@@ -77,7 +76,7 @@ function TestsPage({ data = null }: {
                                 .filter(dt => dt.exclud === false)
                                 .map((dt) => (
                                     <div key={dt.id}>
-                                        <CardComponent onClick={() => toggleExclud(dt.id)} title={dt.name} description={dt.description} excluded={dt.exclud} choiceOptions={choiceOptions} setChoiceOptions={setChoiceOptions} testName={dt.type} />
+                                        <CardComponent onClick={() => toggleExclud(dt.id)} title={dt.name} description={dt.description} descVisible={false} excluded={dt.exclud} choiceOptions={choiceOptions} setChoiceOptions={setChoiceOptions} testName={dt.type} />
                                     </div>
                                 ))
                         )
@@ -96,7 +95,7 @@ function TestsPage({ data = null }: {
                                 .filter(dt => dt.exclud === true)
                                 .map((dt) => (
                                     <div key={dt.id}>
-                                        <CardComponent onClick={() => toggleExclud(dt.id)} title={dt.name} description={dt.description} excluded={dt.exclud} choiceOptions={choiceOptions} setChoiceOptions={setChoiceOptions} testName={dt.type} />
+                                        <CardComponent onClick={() => toggleExclud(dt.id)} title={dt.name} description={dt.description} descVisible={false} excluded={dt.exclud} choiceOptions={choiceOptions} setChoiceOptions={setChoiceOptions} testName={dt.type} />
                                     </div>
                                 ))
                         )
@@ -105,18 +104,31 @@ function TestsPage({ data = null }: {
             </section>
 
             <section className="p-2 rounded-md bg-white-500 shadow">
-                <div className="flex flex-wrap justify-between">
+                <div className="flex flex-wrap justify-between mb-5">
                     <h3 className="font-bold sm:text-2xl">Planifiez une batterie de tests</h3>
                     <Button onClick={handleOpen} >Planifiez</Button>
-                    <PlanModal
+                    <PlanModals
                         open={open}
                         handleClose={handleClose}
                         data={tests}
                     />
-
-                    <div>
-                    </div>
                 </div>
+
+                <div className="flex flex-col gap-2">
+                    {Array.isArray(plans) ? (
+                        plans.length > 0 ? (
+                            plans.map((plan, index) => (
+                                <PlanElement key={index} id={plan.id} title={plan.name} desc={plan.description} timeLaunch={plan.dateTimeLaunch} unit={plan.repeatUnit} every={plan.repeatEvery} valid={plan.valid} date={plan.dateTimeLaunch} tests={plan.planTests} data={tests}/>
+                            ))
+                        ) : (
+                            <p className="text-center py-4 text-gray-600 italic">Aucun plan à afficher</p>
+                        )
+                    ) : (
+                        <SyncLoader color="#3C3C3C" size={8} />
+                    )}
+
+                </div>
+
             </section>
         </main>
     );

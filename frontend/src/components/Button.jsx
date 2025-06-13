@@ -1,6 +1,6 @@
 import { IconArrow } from "./icons";
 
-const Button = ({ children, href = "", onClick = () => {}, blank = false, icon = "arrow", className = "" }) => {
+const Button = ({ children, href = "", onClick = () => {}, blank = false, icon = "arrow", className = "", type = "button" }) => {
     
     const classBtn = "flex items-center gap-1 px-2 font-semibold bg-blue-500 text-blue-300 rounded hover:bg-blue-600 transition cursor-pointer";
 
@@ -14,7 +14,7 @@ const Button = ({ children, href = "", onClick = () => {}, blank = false, icon =
             <button
                 onClick={onClick}
                 className={`${classBtn} ${className}`}
-                type="button"
+                type={type}
             >
                 {children}
                 {iconBtn[icon]}

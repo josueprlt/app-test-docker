@@ -1,5 +1,7 @@
 
 const InfoOptionLaunch = ({ optionsChoice }) => {
+    if (!optionsChoice || optionsChoice.length === 0) return null;
+
     if (optionsChoice.length > 1) {
         return (
             <>
