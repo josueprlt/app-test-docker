@@ -1,16 +1,19 @@
-import { useEffect, useState } from 'react'
-import { IconPlay, IconPause } from "./icons";
-import { useNavigate } from "react-router-dom";
+import {useEffect, useState} from 'react'
+import {IconPlay, IconPause} from "./icons";
+import {useNavigate} from "react-router-dom";
 import SyncLoader from "react-spinners/SyncLoader";
 import MoonLoader from "react-spinners/MoonLoader";
 import InfoOptionLaunch from "./InfoOptionLaunch";
 import ChipDate from "./ChipDate";
 import Button from "./Button";
+import {fetchRunTests} from "../api/run/runTests.jsx";
+import {fetchTestByType} from "../api/test/GetTestByType.jsx";
+import {fetchGlobalTestStatus} from "../api/test/GetGlobalTestsStatus.jsx";
 
-const LaunchSection = ({ data, title = "", txtChipInactif = "", mode = "all" }) => {
+const LaunchSection = ({data, title = "", txtChipInactif = "", mode = "all", options = true}) => {
     const navigate = useNavigate();
     const [state, setState] = useState('inactif');
-    const [dataTests, setDataTests] = useState({ tests: [] });
+    const [dataTests, setDataTests] = useState({tests: []});
     const [typeTest, setTypeTest] = useState(null);
     const [baseType, setBaseType] = useState(null);
     const [argsType, setArgsType] = useState([]);
@@ -30,31 +33,39 @@ const LaunchSection = ({ data, title = "", txtChipInactif = "", mode = "all" }) 
     }
 
     const chipState = {
-        inactif: <ChipDate txt={txtChipInactif ? txtChipInactif : "Lancer le test"} direction="right" icon="hidden" className="hidden md:flex px-2 py-1 rounded-md" />,
+        inactif: <ChipDate txt={txtChipInactif ? txtChipInactif : "Lancer le test"} direction="right" icon="hidden"
+                           className="hidden md:flex px-2 py-1 rounded-md"/>,
         loading:
             <div className="flex items-center gap-2">
-                <MoonLoader color="#EBA800" size={14} />
-                <ChipDate txt="Cela peut prendre plusieurs secondes" direction="right" icon="hidden" color="orange" className="hidden md:flex px-2 py-1 rounded-md" />
+                <MoonLoader color="#EBA800" size={14}/>
+                <ChipDate txt="Cela peut prendre plusieurs secondes" direction="right" icon="hidden" color="orange"
+                          className="hidden md:flex px-2 py-1 rounded-md"/>
             </div>,
-        error: <ChipDate txt="Erreur durant le lancement du test" direction="hidden" icon="cross" color='red' className="hidden md:flex px-2 py-1 rounded-md" />,
-        success: <ChipDate txt="Le test c'est bien déroulé" direction="hidden" icon="check" color='green' className="hidden md:flex px-2 py-1 rounded-md" />,
+        error: <ChipDate txt="Erreur durant le lancement du test" direction="hidden" icon="cross" color='red'
+                         className="hidden md:flex px-2 py-1 rounded-md"/>,
+        success: <ChipDate txt="Le test c'est bien déroulé" direction="hidden" icon="check" color='green'
+                           className="hidden md:flex px-2 py-1 rounded-md"/>,
     }
 
     const iconState = {
-        inactif: <IconPlay />,
-        loading: <IconPause />,
+        inactif: <IconPlay/>,
+        loading: <IconPause/>,
     }
 
     useEffect(() => {
-        let ts = { tests: [] };
+        let ts = {tests: []};
+
         if (data) {
             let values = [];
 
             data.forEach(test => {
-                if (mode !== 'all') setTypeTest(test.type);
+                setTypeTest(test.type)
+                // Si on est en mode 'all', on exclut les tests avec exclud: true
+                if (mode === 'all' && test.exclud === true) {
+                    return;
+                }
 
                 const regex = /\[([^\]]+)\]/;
-
                 const str = test.type;
                 const base = str.split("-[")[0];
 
@@ -65,11 +76,7 @@ const LaunchSection = ({ data, title = "", txtChipInactif = "", mode = "all" }) 
                     values = [];
                 }
 
-                if (values.length > 0) {
-                    ts.tests.push({ testName: base, args: values });
-                } else {
-                    ts.tests.push({ testName: base, args: [] });
-                }
+                ts.tests.push({testName: base, args: values});
 
                 setBaseType(base);
                 setArgsType(values);
@@ -77,11 +84,9 @@ const LaunchSection = ({ data, title = "", txtChipInactif = "", mode = "all" }) 
 
             setDataTests(ts);
         }
-    }, [data]);
+    }, [data, mode]);
 
     const handleLaunchClick = async () => {
-        console.log(dataTests);
-
         if (state !== 'inactif') {
             setState('inactif');
             return;
@@ -89,35 +94,23 @@ const LaunchSection = ({ data, title = "", txtChipInactif = "", mode = "all" }) 
         setState('loading');
 
         try {
-            const response = await fetch('http://localhost:4000/run', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(dataTests),
-            });
-
-            if (!response.ok) throw new Error('Erreur réseau ou réponse non OK');
+            await fetchRunTests(dataTests);
 
             const checkStatus = async () => {
                 let res;
                 let json;
                 let allDone;
                 if (mode !== 'all') {
-                    res = await fetch(`http://localhost:5001/api/tests/type?type=${encodeURIComponent(typeTest)}`);
-                    json = await res.json();
+                    json = await fetchTestByType({type: typeTest});
                     allDone = typeof json[0]?.success === "boolean";
                 } else {
-                    // Exemple d’endpoint qui renvoie un tableau d’états des tests
-                    res = await fetch(`http://localhost:5001/api/tests/status/status`);
-                    json = await res.json();
-                    // Vérifies que tous les tests sont terminés et qu'ils ont leur succès
+                    json = await fetchGlobalTestStatus();
                     allDone = json.every(test => test.success === true || test.success === false);
                 }
 
                 if (allDone) {
-                    setTimeout(() => {
-                        navigate("/");
-                        window.location.reload();
-                    }, 1500);
+                    setState('success');
+                    timeToReload();
                 } else {
                     setTimeout(checkStatus, 5000);
                 }
@@ -126,27 +119,35 @@ const LaunchSection = ({ data, title = "", txtChipInactif = "", mode = "all" }) 
             setTimeout(checkStatus, 10000);
         } catch (error) {
             setState('error');
-            setTimeout(() => {
-                navigate("/");
-                window.location.reload();
-            }, 1500);
+            timeToReload();
         }
+    }
+
+    function timeToReload(time = 1500) {
+        setTimeout(() => {
+            navigate("/");
+            window.location.reload();
+        }, time);
     }
 
     return (
         <>
-            <section className="col-span-1 flex flex-row justify-between items-center gap-4 py-2 px-5 rounded-md bg-white-500 shadow md:py-4 md:p-10 xl:gap-6">
+            <section
+                className="col-span-1 flex flex-row justify-between items-center gap-4 py-2 px-5 rounded-md bg-white-500 shadow md:py-4 md:p-10 xl:gap-6">
                 {data === null ? (
-                    <SyncLoader color="#3C3C3C" size={8} />
+                    <SyncLoader color="#3C3C3C" size={8}/>
                 ) : (
                     <>
                         <div className='flex flex-wrap gap-2'>
-                            <h3 className="text-xl font-bold">{title !== "" ? title : baseType}</h3>
-                            <InfoOptionLaunch optionsChoice={argsType} />
-                            {state === 'loading' && <Button href="http://localhost:4444/ui/#/sessions" blank={true} >Visualiser le test en direct</Button>}
+                            <h3 className="text-xl font-bold">{title === "" ? baseType : title}</h3>
+                            {options && <InfoOptionLaunch optionsChoice={argsType}/>}
+                            {state === 'loading' &&
+                                <Button href="http://localhost:4444/ui/#/sessions" blank={true}>Visualiser le test en
+                                    direct</Button>}
                         </div>
                         <div className="flex items-center gap-2">
-                            <span className={`relative block w-4 h-4 rounded-full ${colorRound[state]} before:absolute before:w-2 before:h-2 before:bg-white-500 before:rounded-full before:top-[4px] before:left-[4px]`}></span>
+                            <span
+                                className={`relative block w-4 h-4 rounded-full ${colorRound[state]} before:absolute before:w-2 before:h-2 before:bg-white-500 before:rounded-full before:top-[4px] before:left-[4px]`}></span>
                             {textSpan[state]}
                         </div>
                         <div className="flex items-center gap-5">

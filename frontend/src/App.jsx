@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import AccueilPage from "./pages/AccueilPage";
-import TestsPage from "./pages/TestsPage";
-import TestPage from "./pages/TestPage";
+import AccueilPage from "./pages/AccueilPage.jsx";
+import TestsPage from "./pages/TestsPage.jsx";
+import TestPage from "./pages/TestPage.jsx";
 import { fetchTests } from './api/test/GetTests.jsx';
 import { fetchAllTests } from './api/test/GetAllTests.jsx';
 
@@ -13,11 +13,11 @@ function App() {
   useEffect(() => {
     fetchTests()
         .then(setTests)
-        .catch((err) => console.error('Error fetching tests:', err));
+        .catch((err) => console.error('Error fetching tests :', err));
 
     fetchAllTests()
         .then(setAllTests)
-        .catch((err) => console.error('Error fetching all tests:', err));
+        .catch((err) => console.error('Error fetching all tests :', err));
   }, []);
 
   return (

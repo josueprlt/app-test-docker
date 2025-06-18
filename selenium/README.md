@@ -38,29 +38,29 @@
 
     .
     ├── README.md               # Ce fichier
-    ├── Dockerfile              # fichier contenant les instructions nécessaires de création d'une image
+    ├── Dockerfile              # fichier contenant les instructions nécessaires à la création d'une image
     ├── .env.example            # fichier à configurer pour le bon fonctionnement du projet
     │
     └── MonEuredenV2            # Dossier de tests pour MEV2
-        ├── processes            # Dossier contenant les processes back/front
+        ├── processes            # Dossier contenant les processus back/front
         ├── steps            # Dossier contenant les étapes redondantes back/front
         ├── templates            # Dossier contenant les templates à réutilisées
         ├── tests            # Dossier contenant les fichiers de tests à éxécuter
-        └── utils            # Dossier contenant les utilitaires
+        └── utils            # Dossier contenant les fonctions utilitaires
 
 ## 🔧 **Technos utilisées _(détaillées)_**
 
-Pour selenium : 
-    - Node.js
-    - Selenium (Librairie)
-    - _axios_
-    - _chalk_
-    - _cors_
-    - _dotenv_
-    - _express_
-    - _selenium-webdriver_
-    - _uuid_
+Pour selenium : <br>
+    - Node.js<br>
+    - Selenium (Librairie)<br>
+    - _axios_<br>
+    - _chalk_<br>
+    - _cors_<br>
+    - _dotenv_<br>
+    - _express_<br>
+    - _selenium-webdriver_<br>
+    - _uuid_<br>
 
 ---
 
-*Dernière mise à jour faite le 05 juin 2025 à 09:30*
+*Dernière mise à jour faite le 17 juin 2025 à 15:53*

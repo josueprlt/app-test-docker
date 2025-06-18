@@ -1,7 +1,7 @@
 const axios = require('axios');
-const { getAccessToken } = require('../../utils/getAccessToken.js');
-const { generateError } = require('../../utils/generateError.js');
-const { GetPE } = require('./getPE.js');
+const {getAccessToken} = require('../../utils/getAccessToken.js');
+const {generateError} = require('../../utils/generateError.js');
+const {GetPE} = require('./getPE.js');
 
 async function DeleteAllPE(codetiers) {
     try {
@@ -22,7 +22,13 @@ async function DeleteAllPE(codetiers) {
                     }
                 });
             } catch (error) {
-                generateError(error, `📄❌ Échec de la suppression du PE avec ID ${pe.id}`, 'backend');
+                if (error.response && error.response.status === 404) {
+                    // La PI a déjà été supprimée, on ignore
+                    console.warn(`📄 PE déjà supprimée : ID ${pe.id}`);
+                } else {
+                    // Autres erreurs à remonter
+                    generateError(error, `📄❌ Échec de la suppression du PE avec ID ${pe.id}`, 'backend');
+                }
             }
         }
 
@@ -31,4 +37,4 @@ async function DeleteAllPE(codetiers) {
     }
 }
 
-module.exports = { DeleteAllPE };
+module.exports = {DeleteAllPE};

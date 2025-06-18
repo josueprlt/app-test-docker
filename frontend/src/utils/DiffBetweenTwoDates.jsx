@@ -3,7 +3,7 @@ export function DiffBetweenTwoDates(txt, dateLog) {
     const logDate = new Date(dateLog);
     let diffInMs = now.getTime() - logDate.getTime();
 
-    const isFuture = diffInMs < 0;
+    // const isFuture = diffInMs < 0;
     diffInMs = Math.abs(diffInMs);
 
     const diffInYears = Math.floor(diffInMs / (1000 * 60 * 60 * 24 * 365));
@@ -12,7 +12,7 @@ export function DiffBetweenTwoDates(txt, dateLog) {
     const diffInHours = Math.floor((diffInMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const diffInMinutes = Math.floor((diffInMs % (1000 * 60 * 60)) / (1000 * 60));
 
-    let date2 = '';
+    let date2;
 
     if (diffInYears > 0) {
         date2 = `${txt} ${diffInYears} an${diffInYears === 1 ? '' : 's'}`;
@@ -28,5 +28,3 @@ export function DiffBetweenTwoDates(txt, dateLog) {
 
     return date2;
 }
-
-export default { DiffBetweenTwoDates };

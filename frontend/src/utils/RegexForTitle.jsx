@@ -17,5 +17,3 @@ export function RegexForTitle(title) {
     }
     return { newTitle, args };
 }
-
-export default { RegexForTitle };

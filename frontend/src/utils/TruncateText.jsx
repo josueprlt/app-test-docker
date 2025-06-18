@@ -4,5 +4,3 @@ export function TruncateText(nbrs, text) {
     }
     return text.slice(0, nbrs) + '...';
 }
-
-export default { TruncateText };

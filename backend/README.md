@@ -26,7 +26,7 @@
 
     .
     ├── README.md           # Ce fichier
-    ├── Dockerfile          # fichier contenant les instructions nécessaires de création d'une image
+    ├── Dockerfile          # fichier contenant les instructions nécessaires à la création d'une image
     │
     ├── config            # Dossier comportant la config du serveur backend
     ├── controllers           # Dossier contenant les fonctions appelées lors d'une requête API
@@ -34,21 +34,22 @@
     ├── routes               # Dossier contenant la config des routes d'API
     │
     ├── index.js           # Fichier principal, s'occupe de lancer le server
+    ├── schedule.js           # Ce fichier s'occupe de la partie planification, il surveille les dates et les lancent si c'est bon
     └── seed.js            # Fichier permettant d'insérée des données à la bdd
 
 ## 🔧 **Technos utilisées _(détaillées)_**
 
-Pour le backend : 
-    - Node.js
-    - Express (Framework)
-    - _axios_
-    - _cors_
-    - _dotenv_
-    - _express_
-    - _mysql2_
-    - _pg_
-    - _sequelize_
+Pour le backend : <br>
+    - Node.js<br>
+    - Express (Framework)<br>
+    - _axios_<br>
+    - _cors_<br>
+    - _dotenv_<br>
+    - _express_<br>
+    - _mysql2_<br>
+    - _pg_<br>
+    - _sequelize_<br>
 
 ---
 
-*Dernière mise à jour faite le 05 juin 2025 à 10:18*
+*Dernière mise à jour faite le 17 juin 2025 à 15:51*

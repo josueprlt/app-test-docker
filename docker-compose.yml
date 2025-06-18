@@ -93,6 +93,8 @@ services:
       - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
       - SE_NODE_MAX_SESSIONS=20
       - SE_NODE_OVERRIDE_MAX_SESSIONS=true
+      - VNC_NO_PASSWORD=${VNC_NO_PASSWORD} # Désactiver le mdp pour l'auth VNC
+      - VNC_PASSWORD=${VNC_PASSWORD} # Changer le mdp
     shm_size: 2g
 
 volumes:

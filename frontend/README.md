@@ -13,12 +13,13 @@
 
     .
     ├── README.md           # Ce fichier
-    ├── Dockerfile          # fichier contenant les instructions nécessaires de création d'une image
+    ├── Dockerfile          # fichier contenant les instructions nécessaires à la création d'une image
     │
     ├── public            # Dossier public du projet
     ├── src               # Dossier source du projet
+    │   ├── api           # Dossier contenant les requêtes API vers le backend
     │   ├── assets            # Dossier assets
-    │   ├── components            # Dossier contenant les composants
+    │   ├── components            # Dossier contenant les composants React
     │   ├── pages            # Dossier contenant les pages principales du projet
     │   └── utils            # Dossier contenant les utilitaires
     │
@@ -28,21 +29,21 @@
 
 ## 🔧 **Technos utilisées _(détaillées)_**
 
-Pour le frontend : 
-    - React.js
-    - TailwindCSS (Framework)
-    - _@emotion/react_
-    - _@emotion/styled_
-    - _@mui/material_
-    - _@tailwindcss/vite_
-    - _chart.js_
-    - _react_
-    - _react-chartjs-2_
-    - _react-dom_
-    - _react-router-dom_
-    - _react-spinners_
-    - _tailwindcss_
+Pour le frontend :<br>
+    - React.js<br>
+    - TailwindCSS (Framework)<br>
+    - _@emotion/react_<br>
+    - _@emotion/styled_<br>
+    - _@mui/material_<br>
+    - _@tailwindcss/vite_<br>
+    - _chart.js_<br>
+    - _react_<br>
+    - _react-chartjs-2_<br>
+    - _react-dom_<br>
+    - _react-router-dom_<br>
+    - _react-spinners_<br>
+    - _tailwindcss_<br>
 
 ---
 
-*Dernière mise à jour faite le 05 juin 2025 à 10:07*
+*Dernière mise à jour faite le 17 juin 2025 à 15:48*

@@ -16,5 +16,3 @@ export function GetTimeDifference(date1Str, date2Str) {
 
     return conversionTime;
 }
-
-export default { GetTimeDifference };

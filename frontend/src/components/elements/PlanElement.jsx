@@ -4,7 +4,7 @@ import { DiffBetweenTwoDates } from "../../utils/DiffBetweenTwoDates";
 import ChipDate from "../ChipDate";
 import Tooltip from '@mui/material/Tooltip';
 import dayjs from 'dayjs';
-import PlanModal from '../modals/PlanModal';
+import UpdatePlanModal from '../modals/UpdatePlanModal.jsx';
 import MoonLoader from "react-spinners/MoonLoader";
 
 const PlanElement = ({ id, title, desc, timeLaunch, unit, every, valid, date, tests, data }) => {
@@ -145,7 +145,7 @@ const PlanElement = ({ id, title, desc, timeLaunch, unit, every, valid, date, te
                     </Tooltip>
                 </div>
             </button>
-            <PlanModal
+            <UpdatePlanModal
                 open={open}
                 handleClose={handleClose}
                 data={data}

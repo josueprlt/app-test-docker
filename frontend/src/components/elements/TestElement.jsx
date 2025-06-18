@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { IconCheck, IconCross, IconBack, IconWarn } from "../icons";
 import { DiffBetweenTwoDates } from "../../utils/DiffBetweenTwoDates";
 import ChipDate from "../ChipDate";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import MoonLoader from "react-spinners/MoonLoader";
 
 const TestElement = ({ id = 0, index, title, date, success, logs = [], mode = "default", nbrsOfTests = 1 }) => {

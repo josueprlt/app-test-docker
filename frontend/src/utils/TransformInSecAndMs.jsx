@@ -1,7 +1,7 @@
 export function TransformInSecAndMs(delay) {
     const seconds = Math.trunc(delay / 1000);
     const milliseconds = delay % 1000;
-    let transformDelay = '';
+    let transformDelay;
 
     if (seconds <= 0) {
         transformDelay = milliseconds + 'ms';
@@ -11,5 +11,3 @@ export function TransformInSecAndMs(delay) {
 
     return transformDelay;
 }
-
-export default { TransformInSecAndMs };

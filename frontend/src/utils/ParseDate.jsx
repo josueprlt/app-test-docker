@@ -8,5 +8,3 @@ export function parseDate(str) {
     if (monthIndex > now.getMonth()) year -= 1;
     return new Date(year, monthIndex, parseInt(day, 10));
 }
-
-export default { parseDate };

@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 5000;
-// const seedDatabase = require('./seed');
+const seedDatabase = require('./seed');
 const schedule = require('./schedule');
 
 const testRoutes = require('./routes/test.routes');
@@ -24,8 +24,8 @@ db.sequelize.sync({ alter: true }) // utilise { force: true } pour forcer un res
   .then(async () => {
     console.log('✅ Modèles synchronisés avec la base de données');
 
-    // await seedDatabase(db);
-    schedule();
+    await seedDatabase(db);
+    await schedule();
 
     app.listen(port, '0.0.0.0', () => {
       console.log(`✅ Backend running on port ${port}`);

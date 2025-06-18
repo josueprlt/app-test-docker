@@ -117,6 +117,11 @@ Le projet utilise **GitLab** pour le versionnement du code. Voici la structure d
     - Node.js
     - Selenium (Librairie)
 
+4. Autres :
+   - Visual Studio Code __(IDE)__
+   - WebStorm __(IDE)__
+   - PostMan __(Test d'API)__
+
 
 ## ❌ **Erreurs et Dépannage**
 
@@ -130,4 +135,4 @@ Pour éviter ce problème, assurez-vous que l'URL ressemble à l'exemple suivant
 
 ---
 
-*Dernière mise à jour faite le 05 juin 2025 à 10:19*
+*Dernière mise à jour faite le 17 juin 2025 à 15:44*

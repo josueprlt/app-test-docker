@@ -1,9 +1,5 @@
 const BASE_URL = 'http://localhost:5001/api';
 
-/**
- * Récupère tous les tests depuis l'API backend.
- * @returns {Promise<Array>} Liste des tests
- */
 export const fetchTests = async () => {
     try {
         const response = await fetch(`${BASE_URL}/tests`);

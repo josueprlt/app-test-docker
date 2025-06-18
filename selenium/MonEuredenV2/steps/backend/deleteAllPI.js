@@ -1,7 +1,7 @@
 const axios = require('axios');
-const { getAccessToken } = require('../../utils/getAccessToken.js');
-const { generateError } = require('../../utils/generateError.js');
-const { GetPI } = require('./getPI.js');
+const {getAccessToken} = require('../../utils/getAccessToken.js');
+const {generateError} = require('../../utils/generateError.js');
+const {GetPI} = require('./getPI.js');
 
 async function DeleteAllPI(codecontact) {
     try {
@@ -22,7 +22,13 @@ async function DeleteAllPI(codecontact) {
                     }
                 });
             } catch (error) {
-                generateError(error, `🪪❌ Échec de la suppression du PI avec ID ${pi.id}`, 'backend');
+                if (error.response && error.response.status === 404) {
+                    // La PI a déjà été supprimée, on ignore
+                    console.warn(`🪪 PI déjà supprimée : ID ${pi.id}`);
+                } else {
+                    // Autres erreurs à remonter
+                    generateError(error, `🪪❌ Échec de la suppression du PI avec ID ${pi.id}`, 'backend');
+                }
             }
         }
 
@@ -31,4 +37,4 @@ async function DeleteAllPI(codecontact) {
     }
 }
 
-module.exports = { DeleteAllPI };
+module.exports = {DeleteAllPI};
