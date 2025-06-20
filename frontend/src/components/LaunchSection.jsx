@@ -10,31 +10,31 @@ import {fetchRunTests} from "../api/run/runTests.jsx";
 import {fetchTestByType} from "../api/test/GetTestByType.jsx";
 import {fetchGlobalTestStatus} from "../api/test/GetGlobalTestsStatus.jsx";
 
-const LaunchSection = ({data, title = "", txtChipInactif = "", mode = "all", options = true}) => {
+const LaunchSection = ({data, title = "", txtChipInactive = "", mode = "all", options = true}) => {
     const navigate = useNavigate();
-    const [state, setState] = useState('inactif');
+    const [state, setState] = useState('inactive');
     const [dataTests, setDataTests] = useState({tests: []});
     const [typeTest, setTypeTest] = useState(null);
     const [baseType, setBaseType] = useState(null);
     const [argsType, setArgsType] = useState([]);
 
     const colorRound = {
-        inactif: "bg-gray-700",
+        inactive: "bg-gray-700",
         loading: "bg-orange-500",
         error: "bg-red-500",
         success: "bg-green-500"
     }
 
     const textSpan = {
-        inactif: <span className="hidden text-base text-gray-700 font-medium sm:block">inactif</span>,
+        inactive: <span className="hidden text-base text-gray-700 font-medium sm:block">inactif</span>,
         loading: <span className="hidden text-base text-orange-500 font-medium sm:block">en cours</span>,
         error: <span className="text-base text-red-500 font-medium">erreur</span>,
         success: <span className="text-base text-green-500 font-medium">succès</span>
     }
 
     const chipState = {
-        inactif: <ChipDate txt={txtChipInactif ? txtChipInactif : "Lancer le test"} direction="right" icon="hidden"
-                           className="hidden md:flex px-2 py-1 rounded-md"/>,
+        inactive: <ChipDate txt={txtChipInactive ? txtChipInactive : "Lancer le test"} direction="right" icon="hidden"
+                            className="hidden md:flex px-2 py-1 rounded-md"/>,
         loading:
             <div className="flex items-center gap-2">
                 <MoonLoader color="#EBA800" size={14}/>
@@ -48,7 +48,7 @@ const LaunchSection = ({data, title = "", txtChipInactif = "", mode = "all", opt
     }
 
     const iconState = {
-        inactif: <IconPlay/>,
+        inactive: <IconPlay/>,
         loading: <IconPause/>,
     }
 
@@ -87,8 +87,8 @@ const LaunchSection = ({data, title = "", txtChipInactif = "", mode = "all", opt
     }, [data, mode]);
 
     const handleLaunchClick = async () => {
-        if (state !== 'inactif') {
-            setState('inactif');
+        if (state !== 'inactive') {
+            setState('inactive');
             return;
         }
         setState('loading');
@@ -109,6 +109,13 @@ const LaunchSection = ({data, title = "", txtChipInactif = "", mode = "all", opt
                 }
 
                 if (allDone) {
+                    for (const test of json) {
+                        if (test.success === false) {
+                            setState('error');
+                            timeToReload();
+                            return;
+                        }
+                    }
                     setState('success');
                     timeToReload();
                 } else {

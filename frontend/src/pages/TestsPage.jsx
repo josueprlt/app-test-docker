@@ -31,7 +31,7 @@ function TestsPage({data = null}) {
         <main className="flex flex-col gap-2 p-2 bg-gray-500 text-black-500 sm:p-4 sm:gap-4 md:px-10">
             <Header />
 
-            <LaunchSection data={tests} title="Tests sélectionnés" txtChipInactif="Lancez tous les tests"
+            <LaunchSection data={tests} title="Tests sélectionnés" txtChipInactive="Lancez tous les tests"
                            options={false} mode="all"/>
 
             <QueueComponent tests={tests} setTests={setTests} />
